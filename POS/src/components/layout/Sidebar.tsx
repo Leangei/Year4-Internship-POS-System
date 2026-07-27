@@ -72,7 +72,7 @@ export default function Sidebar({ userName, userRole, items, collapsed, onToggle
         </button>
       </div>
 
-      {/* Navigation */}
+      
       <nav className="flex-1 space-y-2">
         {items.map(item => {
           const Icon = iconMap[item.icon]
