@@ -13,21 +13,42 @@ import {
   Gem,
   PanelLeftClose,
   PanelRightClose,
+  Store,
+  ShieldCheck,
+  DollarSign,
+  ClipboardCheck,
 } from 'lucide-react'
+
+type SidebarIcon =
+  | 'Home'
+  | 'Mail'
+  | 'ShoppingBag'
+  | 'Box'
+  | 'Users'
+  | 'Settings'
+  | 'MessageCircle'
+  | 'Gem'
+  | 'Store'
+  | 'ShieldCheck'
+  | 'DollarSign'
+  | 'ClipboardCheck'
 
 type SidebarItem = {
   to: string
   label: string
-  icon: 'Home' | 'Mail' | 'ShoppingBag' | 'Box' | 'Users' | 'Settings' | 'MessageCircle'
+  icon: SidebarIcon
   badge?: string
+  end?: boolean
 }
 
 type SidebarProps = {
   userName: string
   userRole?: string
   items: SidebarItem[]
+  footerItems?: SidebarItem[]
   collapsed?: boolean
   onToggle?: () => void
+  onLogout?: () => void
 }
 
 const iconMap = {
@@ -38,12 +59,29 @@ const iconMap = {
   Users: Users,
   MessageCircle: MessageCircle,
   Settings: Settings,
+  Gem: Gem,
+  Store: Store,
+  ShieldCheck: ShieldCheck,
+  DollarSign: DollarSign,
+  ClipboardCheck: ClipboardCheck,
 }
 
 export type { SidebarItem }
-export default function Sidebar({ userName, userRole, items, collapsed, onToggle }: SidebarProps) {
+export default function Sidebar({ userName, userRole, items, footerItems, collapsed, onToggle, onLogout }: SidebarProps) {
   const navigate = useNavigate()
   const [showLogout, setShowLogout] = useState(false)
+  const defaultFooterItems: SidebarItem[] = [
+    { to: '/shopOwner/plan', label: 'អាប់ក្រេតគម្រោង', icon: 'Gem' },
+    { to: '/shopOwner/settings', label: 'កំណត់គណនី', icon: 'Settings' },
+  ]
+  const bottomItems = footerItems ?? defaultFooterItems
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout()
+      return
+    }
+    navigate('/login')
+  }
   return (
     <aside
       className={`flex min-h-full flex-col rounded-[20px] bg-white shadow-[0_60px_120px_rgba(9,30,66,0.08)] transition-all duration-300 ${
@@ -103,33 +141,28 @@ export default function Sidebar({ userName, userRole, items, collapsed, onToggle
       </nav>
 
       {/* Bottom buttons */}
-      <div className={`mt-10 space-y-2 ${collapsed ? 'flex flex-col items-center' : ''}`}>
-        <button
-          onClick={() => navigate('/shopOwner/plan')}
-          className={`flex items-center gap-3 rounded-[10px] text-sm font-medium text-slate-700 transition hover:bg-slate-100 cursor-pointer ${
-            collapsed ? 'justify-center w-full px-0 py-2.5' : 'w-full px-4 py-2.5'
-          }`}
-          title={collapsed ? 'អាប់ក្រេតគម្រោង' : undefined}
-        >
-          <span className="grid place-items-center" style={{ width: 15, height: 15 }}>
-            <Gem size={15} className="text-[#16a34a]" />
-          </span>
-          {!collapsed && <span>អាប់ក្រេតគម្រោង</span>}
-        </button>
-
-        <button
-          onClick={() => navigate('/shopOwner/settings')}
-          className={`flex items-center gap-3 rounded-[10px] text-sm font-medium text-slate-700 transition hover:bg-slate-100 cursor-pointer ${
-            collapsed ? 'justify-center w-full px-0 py-2.5' : 'w-full px-4 py-2.5'
-          }`}
-          title={collapsed ? 'កំណត់គណនី' : undefined}
-        >
-          <span className="grid place-items-center" style={{ width: 15, height: 15 }}>
-            <Settings size={15} className="text-[#16a34a]" />
-          </span>
-          {!collapsed && <span>កំណត់គណនី</span>}
-        </button>
-      </div>
+      {bottomItems.length > 0 && (
+        <div className={`mt-10 space-y-2 ${collapsed ? 'flex flex-col items-center' : ''}`}>
+          {bottomItems.map(item => {
+            const Icon = iconMap[item.icon]
+            return (
+              <button
+                key={item.to}
+                onClick={() => navigate(item.to)}
+                className={`flex items-center gap-3 rounded-[10px] text-sm font-medium text-slate-700 transition hover:bg-slate-100 cursor-pointer ${
+                  collapsed ? 'justify-center w-full px-0 py-2.5' : 'w-full px-4 py-2.5'
+                }`}
+                title={collapsed ? item.label : undefined}
+              >
+                <span className="grid place-items-center" style={{ width: 15, height: 15 }}>
+                  <Icon size={15} className="text-[#16a34a]" />
+                </span>
+                {!collapsed && <span>{item.label}</span>}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       <button
         onClick={() => setShowLogout(true)}
@@ -146,7 +179,7 @@ export default function Sidebar({ userName, userRole, items, collapsed, onToggle
 
       {showLogout && (
         <LogoutModal
-          onConfirm={() => navigate('/login')}
+          onConfirm={handleLogout}
           onCancel={() => setShowLogout(false)}
         />
       )}

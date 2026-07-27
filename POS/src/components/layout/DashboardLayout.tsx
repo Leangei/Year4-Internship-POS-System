@@ -5,12 +5,16 @@ import Sidebar from './Sidebar'
 import type { SidebarItem } from './Sidebar'
 
 const sidebarItems: SidebarItem[] = [
-  { to: '/shopOwner', label: 'ទំព័រដើម', icon: 'Home' },
+  { to: '/shopOwner', label: 'ទំព័រដើម', icon: 'Home', end: true },
   { to: '/shopOwner/inbox', label: 'ប្រអប់សារ', icon: 'MessageCircle' },
   { to: '/shopOwner/orders', label: 'ការកម្មង់', icon: 'ShoppingBag' },
   { to: '/shopOwner/products', label: 'ទំនិញ', icon: 'Box' },
   { to: '/shopOwner/customers', label: 'អតិថិជន', icon: 'Users' },
-  
+]
+
+const footerItems: SidebarItem[] = [
+  { to: '/shopOwner/plan', label: 'អាប់ក្រេតគម្រោង', icon: 'Gem' },
+  { to: '/shopOwner/settings', label: 'កំណត់គណនី', icon: 'Settings' },
 ]
 
 export default function DashboardLayout() {
@@ -32,6 +36,7 @@ export default function DashboardLayout() {
         <div className={`${sidebarCollapsed ? 'w-[72px] min-w-[72px]' : 'w-[240px] min-w-[240px]'} shrink-0 self-stretch transition-all duration-300`}>
           <Sidebar
             items={sidebarItems}
+            footerItems={footerItems}
             userName="Neary Fashion"
             userRole="ហាងលក់សម្លៀកបំពាក់"
             collapsed={sidebarCollapsed}
