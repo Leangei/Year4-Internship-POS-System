@@ -1,8 +1,127 @@
 @import "tailwindcss";
 
 @layer base {
-  html {
-    font-family: "Noto Sans Khmer", sans-serif;
+  :root {
+    /* Colors */
+    --dp-green-950: #00130A;
+    --dp-green-900: #00351B;
+    --dp-green-850: #003B22;
+    --dp-green-800: #0F291E;
+    --dp-green-700: #134F07;
+    --dp-green-600: #1E6C1D;
+    --dp-green-500: #319D05;
+    --dp-lime-500: #BAF911;
+    --dp-lime-400: #BFF052;
+    --dp-lime-100: #E8FDBD;
+    --dp-lime-900: #4B6700;
+    --dp-white: #FFFFFF;
+    --dp-page: #F8F9FA;
+    --dp-page-alt: #F7F9F6;
+    --dp-surface-2: #F3F4F3;
+    --dp-chip: #EDEEEF;
+    --dp-line: #E7E8E9;
+    --dp-line-strong: #C0C9BF;
+    --dp-field-line: #7F8B7E;
+    --dp-faint: #696D78;
+    --dp-muted: #666666;
+    --dp-body: #404941;
+    --dp-ink: #191C1D;
+    --dp-danger: #C82121;
+    --dp-danger-tint: #FFE5E6;
+    --dp-danger-ink: #B42B2B;
+    --dp-danger-hover: #CF2E2E;
+    --dp-danger-active: #D63B3B;
+    --dp-danger-on-dark: #FF9E9E;
+    --dp-warn: #F97316;
+    --dp-warn-tint: #FFEAD5;
+    --dp-warn-ink: #A8460A;
+    --dp-info: #2563EB;
+    --dp-info-tint: #E3EBFD;
+    --dp-info-ink: #1D4ED8;
+    --dp-ok: var(--dp-green-500);
+    --dp-ok-tint: var(--dp-lime-100);
+    --dp-ok-ink: #134F07;
+    --dp-neutral: #707971;
+    --dp-neutral-tint: #E7E8E9;
+    --dp-neutral-ink: #3D4542;
+
+    /* Border radius */
+    --dp-r-xs: 5px;
+    --dp-r-sm: 8px;
+    --dp-r-md: 10px;
+    --dp-r-lg: 12px;
+    --dp-r-field: 15px;
+    --dp-r-stat: 16px;
+    --dp-r-card: 20px;
+    --dp-r-panel: 24px;
+    --dp-r-pill: 9999px;
+
+    /* Spacing */
+    --dp-sp-1: 4px;
+    --dp-sp-2: 8px;
+    --dp-sp-3: 12px;
+    --dp-sp-4: 16px;
+    --dp-sp-5: 20px;
+    --dp-sp-6: 24px;
+    --dp-sp-8: 32px;
+
+    /* Shadows */
+    --dp-shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+    --dp-shadow-card: 0 2px 4px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+    --dp-shadow-pop: 0 4px 20px rgba(0, 0, 0, .1);
+    --dp-shadow-cta: 0 4px 14px rgba(0, 53, 27, .28);
+
+    /* Typography */
+    --dp-font: "Noto Sans Khmer", "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+    --dp-font-latin: "Be Vietnam Pro", "Noto Sans Khmer", system-ui, sans-serif;
+    --dp-fs-2xs: 10px;
+    --dp-lh-2xs: 1.5;
+    --dp-fs-xs: 12px;
+    --dp-lh-xs: 1.35;
+    --dp-fs-sm: 14px;
+    --dp-lh-sm: 1.4;
+    --dp-fs-md: 16px;
+    --dp-lh-md: 1.5;
+    --dp-fs-lg: 20px;
+    --dp-lh-lg: 1.4;
+    --dp-fs-xl: 24px;
+    --dp-lh-xl: 1.35;
+    --dp-fs-2xl: 32px;
+    --dp-lh-2xl: 1.25;
+    --dp-lh-base: 1.55;
+    --dp-fw-regular: 400;
+    --dp-fw-medium: 500;
+    --dp-fw-semibold: 600;
+    --dp-fw-bold: 700;
+
+    /* Layout */
+    --dp-topbar-h: 65px;
+    --dp-sidebar-w: 250px;
+    --dp-sidebar-w-sa: 276px;
+    --dp-sidebar-w-min: 76px;
+    --dp-content-max: 1171px;
+    --dp-mobile-max: 430px;
+    --dp-tabbar-h: 70px;
+    --dp-nav-item-h: 40px;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: var(--dp-font);
+    color: var(--dp-body);
+    background: var(--dp-page);
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+
+  #root {
+    height: 100%;
   }
 }
 
