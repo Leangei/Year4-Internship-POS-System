@@ -21,7 +21,15 @@ function Login() {
     password.length >= 8
 
   return (
-    <div className="relative min-h-screen bg-slate-100 overflow-hidden lg:flex lg:items-center lg:justify-center">
+    <div className="
+relative
+min-h-screen
+bg-slate-100
+overflow-hidden
+lg:flex
+lg:items-center
+lg:justify-center
+">
       {/* Decorative circles */}
       <div className="absolute -top-40 -right-30 h-64 w-64 rounded-full bg-[#1E6C1D]" />
       <div className="absolute -bottom-40 -left-30 h-64 w-64 rounded-full bg-[#1E6C1D]" />
@@ -29,16 +37,28 @@ function Login() {
       <BackButton to="/" className="absolute left-6 top-6 z-20" />
 
       {/* ================= MOBILE LOGIN ================= */}
-      <div className="relative min-h-screen w-full px-6 flex flex-col justify-center lg:hidden overflow-y-auto">
+<div className="
+relative
+w-full
+min-h-screen
+px-6
+pt-24
+pb-10
+flex
+flex-col
+justify-start
+lg:hidden
+overflow-y-auto
+">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <img src={logo} alt="logo" className="h-20 w-auto" />
+        <div className="flex flex-col items-center mb-6">
+          <img src={logo} alt="logo" className="h-16 w-auto" />
           <h1 className="mt-2 text-3xl font-bold tracking-[0.3em] text-[#003B14]">DOMREI</h1>
           <p className="text-sm tracking-[0.35em] text-[#2E6E24]">POS</p>
         </div>
 
         {/* Title */}
-        <h2 className="text-xl text-center font-extrabold text-[#01361C] mb-6">{t("login.title")}</h2>
+        <h2 className="text-xl text-center font-extrabold text-[#01361C] mb-5">{t("login.title")}</h2>
 
         {/* Phone */}
         <label className="text-sm text-gray-600 mb-1">{t("login.phoneLabel")}</label>
