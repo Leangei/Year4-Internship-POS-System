@@ -48,17 +48,49 @@ export default function Navbar({ userName, onMobileMenuToggle, showMobileMenuBut
 
         {/* Right: Store photo only — flush to right edge */}
         <div
-          className="flex items-center px-3 lg:px-5 py-2"
+          className="flex items-center gap-2 px-3 lg:px-5 py-2 lg:hidden"
           style={{
             background: '#BAF912',
-            borderTopLeftRadius: '20px',
+            borderTopLeftRadius: '30px',
             borderBottomLeftRadius: '0',
             borderTopRightRadius: '20px',
             borderBottomRightRadius: '20px',
             height: '100%',
-            marginRight: '-16px',
+            marginRight: '-24px',
           }}
         >
+          <img
+            src={nearyFashionLogo}
+            alt={userName}
+            className="shrink-0"
+            style={{
+              height: '28px',
+              width: '28px',
+              borderRadius: '6px',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        <div
+          className="hidden lg:flex items-center gap-2 px-3 lg:px-5 py-2"
+          style={{
+            background: '#BAF912',
+            borderTopLeftRadius: '90px',
+            borderBottomLeftRadius: '0',
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px',
+            height: '100%',
+            marginRight: '-24px',
+          }}
+        >
+          <div className="text-right hidden lg:block">
+            <p
+              className="font-semibold"
+              style={{ fontSize: '14px', color: '#00351B' }}
+            >
+              NearyFashion
+            </p>
+          </div>
           <img
             src={nearyFashionLogo}
             alt={userName}
