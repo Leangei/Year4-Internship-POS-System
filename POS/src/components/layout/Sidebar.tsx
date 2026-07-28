@@ -52,6 +52,7 @@ type SidebarProps = {
   collapsed?: boolean
   onToggle?: () => void
   onClose?: () => void
+  onNavigate?: () => void
   onLogout?: () => void
 }
 
@@ -71,7 +72,7 @@ const iconMap = {
 }
 
 export type { SidebarItem }
-export default function Sidebar({ userName, userRole, items, footerItems, collapsed, onToggle, onClose, onLogout }: SidebarProps) {
+export default function Sidebar({ userName, userRole, items, footerItems, collapsed, onToggle, onClose, onNavigate, onLogout }: SidebarProps) {
   const navigate = useNavigate()
   const { t } = useTranslation("sidebar")
   const [showLogout, setShowLogout] = useState(false)
@@ -162,6 +163,7 @@ export default function Sidebar({ userName, userRole, items, footerItems, collap
                 }`
               }
               title={collapsed ? item.label : undefined}
+              onClick={onNavigate}
             >
               <span className="grid place-items-center text-slate-900" style={{ width: 15, height: 15 }}>
                 <Icon size={15} />
@@ -183,7 +185,10 @@ export default function Sidebar({ userName, userRole, items, footerItems, collap
             return (
               <button
                 key={item.to}
-                onClick={() => navigate(item.to)}
+                onClick={() => {
+                  navigate(item.to)
+                  onNavigate?.()
+                }}
                 className={`flex items-center gap-3 rounded-[10px] text-sm font-medium text-slate-700 transition hover:bg-slate-100 cursor-pointer ${
                   collapsed ? 'justify-center w-full px-0 py-2.5' : 'w-full px-4 py-2.5'
                 }`}

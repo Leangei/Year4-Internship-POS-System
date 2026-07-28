@@ -88,6 +88,7 @@ export default function DashboardLayout() {
                 userRole={t('shopOwner.userRole')}
                 collapsed={false}
                 onClose={() => setMobileSidebarOpen(false)}
+                onNavigate={() => setMobileSidebarOpen(false)}
               />
             </div>
           </div>
