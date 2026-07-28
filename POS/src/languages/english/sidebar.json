@@ -1,0 +1,27 @@
+{
+  "shopOwner": {
+    "dashboard": "Dashboard",
+    "inbox": "Inbox",
+    "orders": "Orders",
+    "products": "Products",
+    "customers": "Customers",
+    "upgradePlan": "Upgrade Plan",
+    "accountSettings": "Account Settings",
+    "logout": "Log Out",
+    "userRole": "Clothing Store",
+    "expandMenu": "Expand Menu",
+    "collapseMenu": "Collapse Menu",
+    "menu": "Menu"
+  },
+  "superAdmin": {
+    "dashboard": "Dashboard",
+    "approval": "Registration Requests",
+    "shop": "Customers",
+    "plan": "Plans",
+    "payment": "Payment",
+    "settings": "Settings",
+    "console": "Admin Console",
+    "accountAs": "Account As",
+    "logout": "Log Out"
+  }
+}

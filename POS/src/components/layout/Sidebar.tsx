@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import LogoutModal from '../LogoutModal'
+import nearyFashionLogo from '../../assets/header/neary.svg'
 import {
   Home,
   Mail,
@@ -11,6 +13,7 @@ import {
   MessageCircle,
   LogOut,
   Gem,
+  X,
   PanelLeftClose,
   PanelRightClose,
   Store,
@@ -48,6 +51,7 @@ type SidebarProps = {
   footerItems?: SidebarItem[]
   collapsed?: boolean
   onToggle?: () => void
+  onClose?: () => void
   onLogout?: () => void
 }
 
@@ -67,12 +71,13 @@ const iconMap = {
 }
 
 export type { SidebarItem }
-export default function Sidebar({ userName, userRole, items, footerItems, collapsed, onToggle, onLogout }: SidebarProps) {
+export default function Sidebar({ userName, userRole, items, footerItems, collapsed, onToggle, onClose, onLogout }: SidebarProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation("sidebar")
   const [showLogout, setShowLogout] = useState(false)
   const defaultFooterItems: SidebarItem[] = [
-    { to: '/shopOwner/plan', label: 'អាប់ក្រេតគម្រោង', icon: 'Gem' },
-    { to: '/shopOwner/settings', label: 'កំណត់គណនី', icon: 'Settings' },
+    { to: '/shopOwner/plan', label: t('shopOwner.upgradePlan'), icon: 'Gem' },
+    { to: '/shopOwner/settings', label: t('shopOwner.accountSettings'), icon: 'Settings' },
   ]
   const bottomItems = footerItems ?? defaultFooterItems
   const handleLogout = () => {
@@ -89,25 +94,55 @@ export default function Sidebar({ userName, userRole, items, footerItems, collap
       }`}
       style={{ fontFamily: "'Noto Sans Khmer', sans-serif" }}
     >
+      {/* Mobile menu header with close button */}
+      {onClose && (
+        <div className="flex items-center justify-between mb-2 px-2">
+          <span className="text-lg font-semibold text-slate-950">{t('shopOwner.menu')}</span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid place-items-center rounded-[10px] h-10 w-10 text-slate-950 hover:bg-slate-100 transition shrink-0"
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
+        </div>
+      )}
+
       {/* User section */}
       <div className={`mb-2 flex items-center justify-between ${collapsed ? 'p-1' : 'p-2'}`}>
         {!collapsed && (
-          <div className="overflow-hidden">
-            <p className="text-xl font-semibold text-slate-950 truncate">{userName}</p>
-            {userRole ? <p className="mt-1 text-sm text-slate-600 truncate">{userRole}</p> : null}
+          <div className="flex items-center gap-3 overflow-hidden">
+            <img
+              src={nearyFashionLogo}
+              alt={userName}
+              className="shrink-0"
+              style={{
+                height: '48px',
+                width: '48px',
+                borderRadius: '10px',
+                objectFit: 'cover',
+              }}
+            />
+            <div className="overflow-hidden">
+              <p className="text-xl font-semibold text-slate-950 truncate">{userName}</p>
+              {userRole ? <p className="mt-1 text-sm text-slate-600 truncate">{userRole}</p> : null}
+            </div>
           </div>
         )}
-        <button
-          type="button"
-          onClick={onToggle}
-          className={`grid place-items-center rounded-[10px] text-slate-950 hover:bg-slate-100 transition ${
-            collapsed ? 'h-10 w-full' : 'h-10 w-10'
-          }`}
-          aria-label={collapsed ? 'ពង្រីកម៉ឺនុយ' : 'បង្រួមម៉ឺនុយ'}
-          title={collapsed ? 'ពង្រីកម៉ឺនុយ' : 'បង្រួមម៉ឺនុយ'}
-        >
-          {collapsed ? <PanelRightClose size={20} /> : <PanelLeftClose size={20} />}
-        </button>
+        {onToggle && (
+          <button
+            type="button"
+            onClick={onToggle}
+            className={`grid place-items-center rounded-[10px] text-slate-950 hover:bg-slate-100 transition ${
+              collapsed ? 'h-10 w-full' : 'h-10 w-10'
+            }`}
+            aria-label={collapsed ? t('shopOwner.expandMenu') : t('shopOwner.collapseMenu')}
+            title={collapsed ? t('shopOwner.expandMenu') : t('shopOwner.collapseMenu')}
+          >
+            {collapsed ? <PanelRightClose size={20} /> : <PanelLeftClose size={20} />}
+          </button>
+        )}
       </div>
 
       
@@ -169,12 +204,12 @@ export default function Sidebar({ userName, userRole, items, footerItems, collap
         className={`mt-6 flex items-center gap-3 rounded-[10px] text-sm font-medium text-red-500 transition hover:bg-red-50 cursor-pointer ${
           collapsed ? 'justify-center w-full px-0 py-2.5' : 'w-full px-4 py-2.5'
         }`}
-        title={collapsed ? 'ចាកចេញ' : undefined}
+        title={collapsed ? t('shopOwner.logout') : undefined}
       >
         <span className="grid place-items-center" style={{ width: 15, height: 15 }}>
           <LogOut size={15} />
         </span>
-        {!collapsed && <span>ចាកចេញ</span>}
+        {!collapsed && <span>{t('shopOwner.logout')}</span>}
       </button>
 
       {showLogout && (

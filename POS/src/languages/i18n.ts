@@ -3,6 +3,8 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import enAuth from "./english/auth.json";
 import kmAuth from "./khmer/auth.json";
+import enSidebar from "./english/sidebar.json";
+import kmSidebar from "./khmer/sidebar.json";
 
 i18n
   .use(LanguageDetector)
@@ -11,9 +13,11 @@ i18n
     resources: {
       en: {
         auth: enAuth,
+        sidebar: enSidebar,
       },
       km: {
         auth: kmAuth,
+        sidebar: kmSidebar,
       },
     },
     fallbackLng: "km",

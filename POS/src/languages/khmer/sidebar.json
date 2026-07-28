@@ -1,0 +1,27 @@
+{
+  "shopOwner": {
+    "dashboard": "ទំព័រដើម",
+    "inbox": "ប្រអប់សារ",
+    "orders": "ការកម្មង់",
+    "products": "ទំនិញ",
+    "customers": "អតិថិជន",
+    "upgradePlan": "អាប់ក្រេតគម្រោង",
+    "accountSettings": "កំណត់គណនី",
+    "logout": "ចាកចេញ",
+    "userRole": "ហាងលក់សម្លៀកបំពាក់",
+    "expandMenu": "ពង្រីកម៉ឺនុយ",
+    "collapseMenu": "បង្រួមម៉ឺនុយ",
+    "menu": "ម៉ឺនុយ"
+  },
+  "superAdmin": {
+    "dashboard": "ទិដ្ឋភាពទូទៅ",
+    "approval": "សំណើរចុះឈ្មោះ",
+    "shop": "អតិថិជន",
+    "plan": "គម្រោង",
+    "payment": "ការទូទាត់",
+    "settings": "ការកំណត់",
+    "console": "កុងសុលអ្នកគ្រប់គ្រង",
+    "accountAs": "គណនីជា",
+    "logout": "ចាកចេញ"
+  }
+}

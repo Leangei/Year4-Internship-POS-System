@@ -1,21 +1,23 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Grid, ClipboardList, Users, Layout, Settings, LogOut, Banknote } from 'lucide-react'
 import damreiLogo from '../../assets/header/damreiLogo.svg'
 import LogoutModal from '../LogoutModal'
 
-const navItems = [
-  { to: '/superadmin', label: 'ទិដ្ឋភាពទូទៅ', Icon: Grid },
-  { to: '/superadmin/approval', label: 'សំណើរចុះឈ្មោះ', Icon: ClipboardList },
-  { to: '/superadmin/shop', label: 'អតិថិជន', Icon: Users },
-  { to: '/superadmin/plan', label: 'គម្រោង', Icon: Layout },
-  { to: '/superadmin/payment', label: 'ការទូទាត់', Icon: Banknote },
-  { to: '/superadmin/setting', label: 'ការកំណត់', Icon: Settings },
-]
-
 export default function SuperAdminSidebar() {
   const navigate = useNavigate()
+  const { t } = useTranslation("sidebar")
   const [showLogout, setShowLogout] = useState(false)
+
+  const navItems = [
+    { to: '/superadmin', label: t('superAdmin.dashboard'), Icon: Grid },
+    { to: '/superadmin/approval', label: t('superAdmin.approval'), Icon: ClipboardList },
+    { to: '/superadmin/shop', label: t('superAdmin.shop'), Icon: Users },
+    { to: '/superadmin/plan', label: t('superAdmin.plan'), Icon: Layout },
+    { to: '/superadmin/payment', label: t('superAdmin.payment'), Icon: Banknote },
+    { to: '/superadmin/setting', label: t('superAdmin.settings'), Icon: Settings },
+  ]
 
   return (
     <aside className="w-[276px] min-w-[276px] h-screen flex flex-col gap-6 px-4 py-6 bg-[var(--dp-green-900)] text-[var(--dp-white)]" style={{ fontFamily: "'Noto Sans Khmer', sans-serif", fontSize: '14px' }}>
@@ -23,7 +25,7 @@ export default function SuperAdminSidebar() {
         <img src={damreiLogo} alt="DamreiPOS" style={{ height: '44px', width: '44px', borderRadius: '16px' }} />
         <div className="flex flex-col gap-[2px]">
           <span className="text-base font-bold">DamreiPOS</span>
-          <span className="text-sm text-[var(--dp-lime-100)]">កុងសុលអ្នកគ្រប់គ្រង</span>
+          <span className="text-sm text-[var(--dp-lime-100)]">{t('superAdmin.console')}</span>
         </div>
       </div>
 
@@ -49,7 +51,7 @@ export default function SuperAdminSidebar() {
 
       <div className="mt-auto flex flex-col gap-5">
         <div className="flex flex-col gap-2 rounded-[14px] bg-white/10 px-4 py-3">
-          <span className="text-xs text-[var(--dp-lime-100)]">គណនីជា</span>
+          <span className="text-xs text-[var(--dp-lime-100)]">{t('superAdmin.accountAs')}</span>
           <div className="flex items-center gap-3">
             <span
               className="flex h-8 w-8 items-center justify-center rounded-[14px] bg-[var(--dp-lime-500)] text-[var(--dp-green-950)] font-bold"
@@ -70,7 +72,7 @@ export default function SuperAdminSidebar() {
           onClick={() => setShowLogout(true)}
         >
           <LogOut className="text-current" size={20} />
-          <span>ចាកចេញ</span>
+          <span>{t('superAdmin.logout')}</span>
         </button>
 
         {showLogout && (
