@@ -2,12 +2,14 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Eye, EyeOff, Lock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import BackButton from '../../components/BackButton'
 import welcomeImage from '../../assets/login/photoLogin.png'
 import logo from '../../assets/welcome/logo.png'
 
 function ResetPassword() {
   const navigate = useNavigate()
+  const { t } = useTranslation("auth")
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -39,22 +41,22 @@ function ResetPassword() {
 
         <form onSubmit={handleSubmit} className="w-1/2 px-8 py-10 flex flex-col justify-center gap-6 overflow-hidden">
           <div>
-            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">កំណត់ពាក្យសម្ងាត់ថ្មី</h2>
+            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">{t("resetPassword.title")}</h2>
             <p className="text-center text-sm text-slate-500 mt-2">
-              សូមបញ្ចូលពាក្យសម្ងាត់ថ្មីរួចបញ្ជាក់ម្តងទៀត។
+              {t("resetPassword.description")}
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">ពាក្យសម្ងាត់ថ្មី</label>
+              <label className="block text-sm text-gray-600 mb-1">{t("resetPassword.newPasswordLabel")}</label>
               <div className="relative">
                 <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={t("resetPassword.newPasswordPlaceholder")}
                   className="w-full rounded-xl border border-slate-200 bg-transparent pl-12 pr-12 py-3 focus:outline-none focus:ring-1 focus:ring-green-300"
                 />
                 <button
@@ -66,19 +68,19 @@ function ResetPassword() {
                 </button>
               </div>
               {password.length > 0 && password.length < 8 && (
-                <p className="text-xs text-red-500 mt-1">ពាក្យសម្ងាត់ត្រូវមានយ៉ាងហោចណាស់ 8 តួអក្សរ</p>
+                <p className="text-xs text-red-500 mt-1">{t("resetPassword.passwordMinLength")}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm text-gray-600 mb-1">បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
+              <label className="block text-sm text-gray-600 mb-1">{t("resetPassword.confirmPasswordLabel")}</label>
               <div className="relative">
                 <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type={showConfirm ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={t("resetPassword.confirmPasswordPlaceholder")}
                   className="w-full rounded-xl border border-slate-200 bg-transparent pl-12 pr-12 py-3 focus:outline-none focus:ring-1 focus:ring-green-300"
                 />
                 <button
@@ -90,7 +92,7 @@ function ResetPassword() {
                 </button>
               </div>
               {confirmPassword.length > 0 && password !== confirmPassword && (
-                <p className="text-xs text-red-500 mt-1">ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ</p>
+                <p className="text-xs text-red-500 mt-1">{t("resetPassword.passwordMismatch")}</p>
               )}
             </div>
           </div>
@@ -100,7 +102,7 @@ function ResetPassword() {
             disabled={!isFormValid}
             className="w-full rounded-[18px] py-3 text-white font-semibold shadow-md transition bg-green-900 hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            កំណត់
+            {t("resetPassword.submit")}
           </button>
         </form>
       </div>

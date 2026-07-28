@@ -48,8 +48,8 @@ export default function DashboardLayout() {
           className="min-h-0 flex-1 overflow-y-auto p-6"
           style={{
             borderRadius: 'var(--dp-r-panel)',
-            background: 'var(--dp-white)',
-            boxShadow: 'var(--dp-shadow-card)',
+            background: 'transparent',
+            boxShadow: 'none',
           }}
         >
           <Outlet />

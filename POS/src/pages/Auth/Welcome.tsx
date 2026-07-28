@@ -68,7 +68,6 @@ function Welcome() {
             <div className="absolute top-[80%] right-[25%] w-3.5 h-3.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 animate-[bubbleFloat_4.2s_ease-in-out_infinite_0.3s]" />
           </div>
 
-        
           <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-6 rounded-2xl bg-white/85 backdrop-blur-md px-6 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/40">
             <div className="flex flex-col items-center justify-center text-center min-w-[70px]">
               <span className="text-lg text-[#005F20]">

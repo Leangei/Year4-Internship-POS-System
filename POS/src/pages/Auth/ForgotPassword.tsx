@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Phone } from 'lucide-react'
 import BackButton from '../../components/BackButton'
 import welcomeImage from '../../assets/login/photoLogin.png'
@@ -8,6 +9,7 @@ import logo from '../../assets/welcome/logo.png'
 
 function ForgotPassword() {
   const navigate = useNavigate()
+  const { t } = useTranslation("auth")
   const [phone, setPhone] = useState('')
   const isFormValid = phone.trim() !== ''
 
@@ -35,19 +37,19 @@ function ForgotPassword() {
 
         <form onSubmit={handleSubmit} className="w-1/2 px-8 py-8 flex flex-col justify-center gap-4 overflow-hidden">
           <div>
-            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">ភ្លេចពាក្យសម្ងាត់?</h2>
+            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">{t("forgotPassword.title")}</h2>
             <p className="text-center text-sm text-slate-500 mt-2">
-              បញ្ចូលលេខទូរស័ព្ទរបស់អ្នក ដើម្បីទទួលរង្វិលកូដ SMS សម្រាប់កំណត់ពាក្យសម្ងាត់ឡើងវិញ។
+              {t("forgotPassword.description")}
             </p>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm text-gray-600">លេខទូរស័ព្ទ</label>
+            <label className="block text-sm text-gray-600">{t("forgotPassword.phoneLabel")}</label>
             <div className="relative">
               <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="+855XXXXXXXX"
+                placeholder={t("forgotPassword.phonePlaceholder")}
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300"
@@ -60,7 +62,7 @@ function ForgotPassword() {
             disabled={!isFormValid}
             className={`w-full rounded-xl py-3 text-white font-semibold shadow-md transition ${isFormValid ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}
           >
-            បញ្ជូនកូដ
+            {t("forgotPassword.sendCode")}
           </button>
 
           

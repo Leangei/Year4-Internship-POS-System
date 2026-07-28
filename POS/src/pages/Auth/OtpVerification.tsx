@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import type { KeyboardEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import BackButton from '../../components/BackButton'
 import welcomeImage from '../../assets/login/photoLogin.png'
 import logo from '../../assets/welcome/logo.png'
@@ -10,6 +11,7 @@ const OTP_LENGTH = 6
 
 function OtpVerification() {
   const navigate = useNavigate()
+  const { t } = useTranslation("auth")
   const [code, setCode] = useState<string[]>(Array(OTP_LENGTH).fill(''))
   const inputsRef = useRef<Array<HTMLInputElement | null>>([])
 
@@ -60,9 +62,9 @@ function OtpVerification() {
 
         <form onSubmit={handleSubmit} className="w-1/2 px-8 py-10 flex flex-col justify-center gap-6 overflow-hidden">
           <div>
-            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">កូដពាក្យសម្ងាត់</h2>
+            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">{t("otpVerification.title")}</h2>
             <p className="text-center text-sm text-slate-500 mt-2">
-              បញ្ចូលលេខកូដ PIN ដែលយើងបានផ្ញើទៅជាសារ SMS ទៅលេខទូរស័ព្ទរបស់អ្នក។
+              {t("otpVerification.description")}
             </p>
           </div>
 
@@ -87,11 +89,11 @@ function OtpVerification() {
             disabled={!isComplete}
             className={`w-full rounded-[18px] py-3 text-white font-semibold shadow-md transition ${isComplete ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}
           >
-            បញ្ចូល
+            {t("otpVerification.submit")}
           </button>
 
           <p className="text-center text-sm text-slate-500">
-            មិនទទួលបានកូដ? <button type="button" className="font-semibold text-green-900">ផ្ញើកូដម្តងទៀត</button>
+            {t("otpVerification.noCode")} <button type="button" className="font-semibold text-green-900">{t("otpVerification.resend")}</button>
           </p>
         </form>
       </div>

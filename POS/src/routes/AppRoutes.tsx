@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Welcome from '../pages/Auth/Welcome'
 import Login from '../pages/Auth/Login'
 import Register from '../pages/Auth/Register'
+import Language from '../pages/Auth/Language'
 import OtpVerification from '../pages/Auth/OtpVerification'
 import ForgotPassword from '../pages/Auth/ForgotPassword'
 import ResetPassword from '../pages/Auth/ResetPassword'
@@ -26,6 +27,7 @@ function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Welcome />} />
+        <Route path="/language" element={<Language />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/otp-verification" element={<OtpVerification />} />
