@@ -6,6 +6,7 @@ import Language from '../pages/Auth/Language'
 import OtpVerification from '../pages/Auth/OtpVerification'
 import ForgotPassword from '../pages/Auth/ForgotPassword'
 import ResetPassword from '../pages/Auth/ResetPassword'
+import WaitingApproval from '../pages/Auth/WaitingApproval'
 import DashboardLayout from '../components/layout/DashboardLayout.tsx'
 import SuperAdminLayout from '../components/layout/SuperAdminLayout.tsx'
 import DashboardHome from '../ShopOwner/Hompage/DashboardHome.tsx'
@@ -30,6 +31,7 @@ function AppRoutes() {
         <Route path="/language" element={<Language />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/waiting-approval" element={<WaitingApproval />} />
         <Route path="/otp-verification" element={<OtpVerification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />

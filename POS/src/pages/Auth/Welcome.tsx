@@ -1,4 +1,5 @@
 ﻿import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import welcomeImage from "../../assets/welcome/welcome.png";
 import logo from "../../assets/welcome/logo.png";
 import clock from "../../assets/welcome/clock.png";
@@ -7,89 +8,103 @@ import thunder from "../../assets/welcome/thunder.png";
 
 function Welcome() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("auth");
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "km" ? "en" : "km";
+    i18n.changeLanguage(newLang);
+  };
+
+  const currentLang = i18n.language;
 
   return (
     <div className="min-h-screen bg-white lg:bg-slate-100 lg:flex lg:items-center lg:justify-center lg:px-4 lg:py-8">
       <div className="w-full lg:max-w-[900px] lg:flex lg:flex-col lg:items-center lg:gap-6">
-{/* Mobile Welcome */}
-<div className="relative h-screen w-full overflow-hidden lg:hidden">
-  {/* Background */}
-  <img
-    src={welcomeImage}
-    alt="Welcome"
-    className="absolute inset-0 h-full w-full object-cover"
-  />
+        {/* Language Toggle Button */}
+        <button
+          onClick={toggleLanguage}
+          className="absolute top-4 right-4 z-50 flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 backdrop-blur-sm px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-white hover:shadow-md transition-all duration-200 lg:top-6 lg:right-6"
+        >
+          <span className="text-base">{currentLang === "km" ? "🇬🇧" : "🇰🇭"}</span>
+          <span>{currentLang === "km" ? "English" : "ភាសាខ្មែរ"}</span>
+        </button>
 
-  {/* Light overlay */}
-  <div className="absolute inset-0 bg-white/10" />
+        {/* Mobile Welcome */}
+        <div className="relative h-screen w-full overflow-hidden lg:hidden">
+          {/* Background */}
+          <img
+            src={welcomeImage}
+            alt="Welcome"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
 
-  {/* Logo */}
-  <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
-    <img src={logo} alt="Logo" className="h-24 w-auto" />
+          {/* Light overlay */}
+          <div className="absolute inset-0 bg-white/10" />
 
-    <h1 className="mt-4 text-4xl font-bold tracking-[0.3em] text-[#003B14]">
-      DOMREI
-    </h1>
+          {/* Logo */}
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
+            <img src={logo} alt="Logo" className="h-24 w-auto" />
 
-   <p className="mt-2 text-xl text-[#2E6E24] uppercase tracking-[0.15em] sm:tracking-[0.35em]">
-  Point of Sale
-</p>
+            <h1 className="mt-4 text-4xl font-bold tracking-[0.3em] text-[#003B14]">
+              DOMREI
+            </h1>
 
-  </div>
+            <p className="mt-2 text-xl text-[#2E6E24] uppercase tracking-[0.15em] sm:tracking-[0.35em]">
+              Point of Sale
+            </p>
+          </div>
 
-  {/* Feature Card */}
-  <div className="absolute bottom-28 left-5 right-5 rounded-3xl bg-white/95 backdrop-blur-md shadow-xl px-4 py-5">
-    <div className="grid grid-cols-3">
+          {/* Feature Card */}
+          <div className="absolute bottom-28 left-5 right-5 rounded-3xl bg-white/95 backdrop-blur-md shadow-xl px-4 py-5">
+            <div className="grid grid-cols-3">
+              <div className="flex flex-col items-center">
+                <img src={clock} className="h-6 w-6" />
+                <p className="mt-2 text-xs text-[#003B14]">
+                  {t("welcome.easyManagement")}
+                </p>
+              </div>
 
-      <div className="flex flex-col items-center">
-        <img src={clock} className="h-6 w-6" />
-        <p className="mt-2 text-xs text-[#003B14]">
-          គ្រប់គ្រងងាយ
-        </p>
-      </div>
+              <div className="border-x border-gray-200 flex flex-col items-center">
+                <img src={star} className="h-6 w-6" />
+                <p className="mt-2 text-xs text-[#003B14]">
+                  {t("welcome.efficient")}
+                </p>
+              </div>
 
-      <div className="border-x border-gray-200 flex flex-col items-center">
-        <img src={star} className="h-6 w-6" />
-        <p className="mt-2 text-xs text-[#003B14]">
-          មានប្រសិទ្ធភាព
-        </p>
-      </div>
+              <div className="flex flex-col items-center">
+                <img src={thunder} className="h-6 w-6" />
+                <p className="mt-2 text-xs text-[#003B14]">
+                  {t("welcome.fast")}
+                </p>
+              </div>
+            </div>
+          </div>
 
-      <div className="flex flex-col items-center">
-        <img src={thunder} className="h-6 w-6" />
-        <p className="mt-2 text-xs text-[#003B14]">
-          លឿនរហ័ស
-        </p>
-      </div>
+          {/* Button */}
+          <div className="absolute bottom-8 left-5 right-5">
+            <button
+              onClick={() => navigate("/login")}
+              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#003B14] py-4 text-white font-semibold shadow-lg"
+            >
+              {t("welcome.getStarted")}
 
-    </div>
-  </div>
-
-  {/* Button */}
-  <div className="absolute bottom-8 left-5 right-5">
-    <button
-      onClick={() => navigate("/login")}
-      className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#003B14] py-4 text-white font-semibold shadow-lg"
-    >
-      ចាប់ផ្តើមប្រើប្រាស់ឥឡូវនេះ
-
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M5 12h14m-6-6l6 6-6 6"
-        />
-      </svg>
-    </button>
-  </div>
-</div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 12h14m-6-6l6 6-6 6"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
 
         {/* Desktop welcome */}
         <div className="hidden lg:flex w-full h-[83vh] overflow-hidden rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,59,20,0.15)] animate-[fadeInUp_0.7s_ease-out_forwards]">
@@ -112,7 +127,7 @@ function Welcome() {
 
             <div className="relative z-10 mt-2 mb-2 flex items-center justify-center">
               <p className="max-w-[260px] text-[13px] leading-7 text-[#003B14]/80 font-medium">
-                ប្រព័ន្ធគ្រប់គ្រងការលក់សម្រាប់អាជីវកម្មសម័យថ្មី
+                {t("welcome.description")}
               </p>
             </div>
 
@@ -120,7 +135,7 @@ function Welcome() {
               onClick={() => navigate("/login")}
               className="relative z-10 group rounded-[10px] bg-[#003B14] px-12 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#003B14]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[#003B14]/30 hover:-translate-y-0.5 active:translate-y-0"
             >
-              <span className="relative z-10">ចាប់ផ្តើមប្រើប្រាស់ឥឡូវនេះ</span>
+              <span className="relative z-10">{t("welcome.getStarted")}</span>
               <div className="absolute inset-0 rounded-[10px] bg-gradient-to-r from-[#005F20] to-[#009933] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
           </div>
@@ -150,7 +165,7 @@ function Welcome() {
                 <span className="text-lg text-[#005F20]">
                   <img src={clock} alt="Clock" className="w-5 h-5" />
                 </span>
-                <p className="mt-1.5 text-xs font-medium text-[#003B14] whitespace-nowrap">គ្រប់គ្រងងាយ</p>
+                <p className="mt-1.5 text-xs font-medium text-[#003B14] whitespace-nowrap">{t("welcome.easyManagement")}</p>
               </div>
 
               <div className="w-[1px] bg-[#80E5A0] self-stretch" />
@@ -159,7 +174,7 @@ function Welcome() {
                 <span className="text-lg text-[#005F20]">
                   <img src={star} alt="Star" className="w-5 h-5" />
                 </span>
-                <p className="mt-1.5 text-xs font-medium text-[#003B14] whitespace-nowrap">មានប្រសិទ្ធភាព</p>
+                <p className="mt-1.5 text-xs font-medium text-[#003B14] whitespace-nowrap">{t("welcome.efficient")}</p>
               </div>
 
               <div className="w-[1px] bg-[#80E5A0] self-stretch" />
@@ -168,7 +183,7 @@ function Welcome() {
                 <span className="text-lg text-[#005F20]">
                   <img src={thunder} alt="Thunder" className="w-5 h-5" />
                 </span>
-                <p className="mt-1.5 text-xs font-medium text-[#003B14] whitespace-nowrap">លឿនរហ័ស</p>
+                <p className="mt-1.5 text-xs font-medium text-[#003B14] whitespace-nowrap">{t("welcome.fast")}</p>
               </div>
             </div>
           </div>

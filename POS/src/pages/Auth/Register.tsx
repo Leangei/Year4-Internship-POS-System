@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Eye, EyeOff, Phone, User } from 'lucide-react'
 import { FaFacebook, FaTelegram } from 'react-icons/fa'
@@ -9,6 +10,7 @@ import logo from "../../assets/welcome/logo.png"
 import BackButton from '../../components/BackButton'
 
 function Register() {
+  const navigate = useNavigate()
   const { t } = useTranslation("auth")
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -119,6 +121,8 @@ function Register() {
 
         {/* Register Button */}
         <button
+          type="button"
+          onClick={() => isFormValid && navigate('/waiting-approval')}
           disabled={!isFormValid}
           className={`w-full rounded-xl py-2.5 text-sm text-white font-semibold ${isFormValid ? "bg-green-900" : "bg-gray-400 cursor-not-allowed"}`}
         >
@@ -205,7 +209,14 @@ function Register() {
             <span>{t("register.agreeTerms")}</span>
           </label>
 
-          <button disabled={!isFormValid} className={`w-full rounded-xl py-2.5 text-white font-semibold shadow-md transition ${isFormValid ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}>{t("register.registerButton")}</button>
+          <button
+            type="button"
+            onClick={() => isFormValid && navigate('/waiting-approval')}
+            disabled={!isFormValid}
+            className={`w-full rounded-xl py-2.5 text-white font-semibold shadow-md transition ${isFormValid ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}
+          >
+            {t("register.registerButton")}
+          </button>
 
           <div className="text-center text-sm text-slate-500">{t("register.orLoginWith")}</div>
 
