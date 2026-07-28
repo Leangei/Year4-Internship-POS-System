@@ -31,9 +31,10 @@ function Welcome() {
       DOMREI
     </h1>
 
-    <p className="mt-2 text-xl tracking-[0.35em] text-[#2E6E24] uppercase">
-      Point of Sale
-    </p>
+   <p className="mt-2 text-xl text-[#2E6E24] uppercase tracking-[0.15em] sm:tracking-[0.35em]">
+  Point of Sale
+</p>
+
   </div>
 
   {/* Feature Card */}

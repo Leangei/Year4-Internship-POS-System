@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Eye, EyeOff, Phone, User, Calendar } from 'lucide-react'
+import { Eye, EyeOff, Phone, User } from 'lucide-react'
 import { FaFacebook, FaTelegram } from 'react-icons/fa'
 import lockIcon from "../../assets/login/lock.svg"
 import googleIcon from "../../assets/login/google.svg"
@@ -13,7 +13,6 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [name, setName] = useState('')
-  const [gender, setGender] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -21,21 +20,136 @@ function Register() {
 
   const isFormValid =
     name.trim() !== '' &&
-    gender.trim() !== '' &&
     phone.trim() !== '' &&
     password.length >= 8 &&
     confirmPassword.length >= 8 &&
     agreeTerms
 
   return (
-    <div className="relative h-screen bg-slate-100 flex items-center justify-center overflow-hidden">
-      {/* Top-right half circle */}
+    <div className="relative min-h-screen bg-slate-100 overflow-hidden lg:flex lg:items-center lg:justify-center">
+      {/* Top-right & Bottom-left circles */}
       <div className="absolute -top-40 -right-30 h-64 w-64 rounded-full bg-[#1E6C1D]" />
-      {/* Bottom-left half circle */}
       <div className="absolute -bottom-40 -left-30 h-64 w-64 rounded-full bg-[#1E6C1D]" />
-      <BackButton to="/login" className="absolute left-6 top-6 z-10" />
 
-      <div className="mx-auto flex h-[calc(100vh-4rem)] w-full max-w-[850px] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_60px_rgba(2,6,23,0.08)]">
+      {/* ================= MOBILE REGISTER ================= */}
+      <div className="relative min-h-screen w-full px-6 flex flex-col justify-center lg:hidden">
+        <BackButton to="/login" className="absolute left-6 top-6 z-10" />
+
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-3">
+          <img src={logo} alt="logo" className="h-14 w-auto" />
+          <h1 className="mt-1 text-2xl font-bold tracking-[0.3em] text-[#003B14]">DOMREI</h1>
+          <p className="text-xs tracking-[0.35em] text-[#2E6E24]">POS</p>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-lg text-center font-extrabold text-[#01361C] mb-4">{t("register.title")}</h2>
+
+        {/* Name */}
+        <label className="text-xs text-gray-600 mb-1">{t("register.nameLabel")}</label>
+        <div className="relative mb-3">
+          <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder={t("register.namePlaceholder")}
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+          />
+        </div>
+
+        {/* Phone */}
+        <label className="text-xs text-gray-600 mb-1">{t("register.phoneLabel")}</label>
+        <div className="relative mb-3">
+          <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder={t("register.phonePlaceholder")}
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+          />
+        </div>
+
+        {/* Password */}
+        <label className="text-xs text-gray-600 mb-1">{t("register.passwordLabel")}</label>
+        <div className="relative mb-3">
+          <img src={lockIcon} className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 opacity-50" />
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder={t("register.passwordPlaceholder")}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+
+        {/* Confirm Password */}
+        <label className="text-xs text-gray-600 mb-1">{t("register.confirmPasswordLabel")}</label>
+        <div className="relative mb-3">
+          <img src={lockIcon} className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 opacity-50" />
+          <input
+            type={showConfirm ? "text" : "password"}
+            placeholder={t("register.confirmPasswordPlaceholder")}
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirm(!showConfirm)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+
+        {/* Terms */}
+        <label className="flex items-start gap-2 text-xs text-gray-600 mb-3">
+          <input type="checkbox" checked={agreeTerms} onChange={e => setAgreeTerms(e.target.checked)} className="mt-0.5 h-3.5 w-3.5" />
+          <span>{t("register.agreeTerms")}</span>
+        </label>
+
+        {/* Register Button */}
+        <button
+          disabled={!isFormValid}
+          className={`w-full rounded-xl py-2.5 text-sm text-white font-semibold ${isFormValid ? "bg-green-900" : "bg-gray-400 cursor-not-allowed"}`}
+        >
+          {t("register.registerButton")}
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-4">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400">{t("register.orLoginWith")}</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        {/* Social */}
+        <div className="flex justify-center gap-4">
+          <button className="h-9 w-9 rounded-full border flex items-center justify-center">
+            <img src={googleIcon} className="w-4" />
+          </button>
+          <button className="h-9 w-9 rounded-full border flex items-center justify-center">
+            <FaFacebook className="text-blue-600 text-base" />
+          </button>
+          <button className="h-9 w-9 rounded-full border flex items-center justify-center">
+            <FaTelegram className="text-blue-400 text-base" />
+          </button>
+        </div>
+      </div>
+
+      {/* ================= DESKTOP REGISTER ================= */}
+      <div className="hidden lg:flex mx-auto h-[550px] w-full max-w-[850px] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_60px_rgba(2,6,23,0.08)]">
+        <BackButton to="/login" className="absolute left-6 top-6 z-10" />
+
         <div className="w-1/2 relative bg-slate-200">
           <img src={welcomeImage} alt="Register" className="h-full w-full object-cover" />
           <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
@@ -46,24 +160,13 @@ function Register() {
         </div>
 
         <div className="w-1/2 px-8 py-6 flex flex-col justify-center gap-3 overflow-y-auto">
-          <div>
-            <h2 className="text-2xl text-center font-extrabold text-[#01361C]">{t("register.title")}</h2>
-          </div>
+          <h2 className="text-2xl text-center font-extrabold text-[#01361C]">{t("register.title")}</h2>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">{t("register.nameLabel")}</label>
-              <div className="relative">
-                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input type="text" placeholder={t("register.namePlaceholder")} value={name} onChange={e => setName(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">{t("register.genderLabel")}</label>
-              <div className="relative">
-                <Calendar size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input type="text" placeholder={t("register.genderPlaceholder")} value={gender} onChange={e => setGender(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300" />
-              </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">{t("register.nameLabel")}</label>
+            <div className="relative">
+              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input type="text" placeholder={t("register.namePlaceholder")} value={name} onChange={e => setName(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300" />
             </div>
           </div>
 
