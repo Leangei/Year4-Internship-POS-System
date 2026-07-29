@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Clock, Wallet, Package, DollarSign, Box, Truck, CreditCard, Calendar, type LucideIcon } from 'lucide-react'
 import DashboardKpiGrid from './DashboardKpiGrid'
 import DashboardChart from './DashboardChart.tsx'
@@ -22,25 +23,25 @@ const dashboardVariants: Record<DashboardRange, DashboardVariant> = {
   'ថ្ងៃនេះ': {
     kpiCards: [
       {
-        title: 'ចំណូលសរុប',
+        title: 'totalRevenue',
         value: '$12,450.00',
         icon: Wallet,
         bg: 'bg-[#064E2B] text-white',
-        subtitle: '+15% ពីខែមុន',
+        subtitle: 'fromLastMonth',
       },
       {
-        title: 'ការកម្មង់សរុប',
+        title: 'totalOrders',
         value: '128',
         icon: Package,
         bg: 'bg-white text-slate-900',
-        subtitle: '18 កំពុងរង់ចាំ',
+        subtitle: 'remaining',
       },
       {
-        title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
+        title: 'avgOrderValue',
         value: '$97.27',
         icon: DollarSign,
         bg: 'bg-white text-slate-900',
-        subtitle: 'ធម្មតា',
+        subtitle: 'normal',
       },
     ],
     chartData: [
@@ -58,30 +59,30 @@ const dashboardVariants: Record<DashboardRange, DashboardVariant> = {
       { label: '5PM', value: 170 },
       { label: '6PM', value: 140 },
     ],
-    chartSubtitle: 'ស្ថិតិប្រចាំថ្ងៃសម្រាប់ថ្ងៃនេះ',
+    chartSubtitle: 'salesStats',
   },
   'សប្តាហ៍នេះ': {
     kpiCards: [
       {
-        title: 'ចំណូលសរុប',
+        title: 'totalRevenue',
         value: '$78,340.00',
         icon: Wallet,
         bg: 'bg-[#064E2B] text-white',
-        subtitle: '+12% ពីសប្តាហ៍មុន',
+        subtitle: 'fromLastMonth',
       },
       {
-        title: 'ការកម្មង់សរុប',
+        title: 'totalOrders',
         value: '912',
         icon: Package,
         bg: 'bg-white text-slate-900',
-        subtitle: '47 កំពុងរង់ចាំ',
+        subtitle: 'remaining',
       },
       {
-        title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
+        title: 'avgOrderValue',
         value: '$85.92',
         icon: DollarSign,
         bg: 'bg-white text-slate-900',
-        subtitle: 'សប្តាហ៍នេះ',
+        subtitle: 'normal',
       },
     ],
     chartData: [
@@ -93,30 +94,30 @@ const dashboardVariants: Record<DashboardRange, DashboardVariant> = {
       { label: 'សៅរ៍', value: 1_230 },
       { label: 'អាទិត្យ', value: 980 },
     ],
-    chartSubtitle: 'ស្ថិតិប្រចាំសប្តាហ៍នេះ',
+    chartSubtitle: 'salesStats',
   },
   'ខែនេះ': {
     kpiCards: [
       {
-        title: 'ចំណូលសរុប',
+        title: 'totalRevenue',
         value: '$312,800.00',
         icon: Wallet,
         bg: 'bg-[#064E2B] text-white',
-        subtitle: '+18% ពីខែមុន',
+        subtitle: 'fromLastMonth',
       },
       {
-        title: 'ការកម្មង់សរុប',
+        title: 'totalOrders',
         value: '3,540',
         icon: Package,
         bg: 'bg-white text-slate-900',
-        subtitle: '120 កំពុងរង់ចាំ',
+        subtitle: 'remaining',
       },
       {
-        title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
+        title: 'avgOrderValue',
         value: '$88.33',
         icon: DollarSign,
         bg: 'bg-white text-slate-900',
-        subtitle: 'ខែនេះ',
+        subtitle: 'normal',
       },
     ],
     chartData: [
@@ -125,26 +126,26 @@ const dashboardVariants: Record<DashboardRange, DashboardVariant> = {
       { label: 'សប្តាហ៍ 3', value: 2_950 },
       { label: 'សប្តាហ៍ 4', value: 3_320 },
     ],
-    chartSubtitle: 'ស្ថិតិប្រចាំខែនេះ',
+    chartSubtitle: 'salesStats',
   },
 }
 
 const orderStatusCards = [
-  { label: 'មិនទាន់បង់ប្រាក់', count: 12, icon: CreditCard },
-  { label: 'មិនទាន់វេចខ្ចប់', count: 8, icon: Box },
-  { label: 'មិនទាន់ដឹកជញ្ជូន', count: 5, icon: Truck },
+  { label: 'unpaid', count: 12, icon: CreditCard },
+  { label: 'unpackaged', count: 8, icon: Box },
+  { label: 'notDelivered', count: 5, icon: Truck },
 ]
 
 const paymentStatusData = [
-  { label: 'បានបង់ប្រាក់', value: 78, color: '#16A34A', amount: '$9,711.00' },
-  { label: 'កំពុងរង់ចាំ', value: 15, color: '#F59E0B', amount: '$1,867.50' },
-  { label: 'បានលុបចោល', value: 7, color: '#EF4444', amount: '$871.50' },
+  { label: 'paid', value: 78, color: '#16A34A', amount: '$9,711.00' },
+  { label: 'pending', value: 15, color: '#F59E0B', amount: '$1,867.50' },
+  { label: 'cancelled', value: 7, color: '#EF4444', amount: '$871.50' },
 ]
 
 const orderSourceData = [
-  { label: 'មកហាង', value: 65, color: '#16A34A' },
-  { label: 'Facebook', value: 22, color: '#3B82F6' },
-  { label: 'Messenger', value: 13, color: '#8B5CF6' },
+  { label: 'inStore', value: 65, color: '#16A34A' },
+  { label: 'facebook', value: 22, color: '#3B82F6' },
+  { label: 'messenger', value: 13, color: '#8B5CF6' },
 ]
 
 const bestSellingProducts = [
@@ -172,6 +173,7 @@ const topCustomers = [
 ]
 
 function DonutChart({ data }: { data: { label: string; value: number; color: string }[] }) {
+  const { t } = useTranslation("homepage")
   const total = data.reduce((sum, d) => sum + d.value, 0)
   const radius = 60
   const circumference = 2 * Math.PI * radius
@@ -205,7 +207,7 @@ function DonutChart({ data }: { data: { label: string; value: number; color: str
       })}
       <circle cx="80" cy="80" r="38" fill="white" />
       <text x="80" y="76" textAnchor="middle" fontSize="22" fontWeight="700" fill="#191C1D">{total}</text>
-      <text x="80" y="94" textAnchor="middle" fontSize="11" fill="#666">សរុប</text>
+      <text x="80" y="94" textAnchor="middle" fontSize="11" fill="#666">{t('total')}</text>
     </svg>
   )
 }
@@ -231,8 +233,15 @@ function AvatarImage({ src, name }: { src: string; name: string }) {
 }
 
 export default function DashboardHome() {
+  const { t } = useTranslation("homepage")
   const [selectedRange, setSelectedRange] = useState<DashboardRange>('ថ្ងៃនេះ')
   const currentVariant = dashboardVariants[selectedRange]
+
+  const rangeLabels: Record<DashboardRange, string> = {
+    'ថ្ងៃនេះ': t('today'),
+    'សប្តាហ៍នេះ': t('thisWeek'),
+    'ខែនេះ': t('thisMonth'),
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -242,7 +251,7 @@ export default function DashboardHome() {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2" style={{ fontSize: '20px', fontWeight: 700, color: '#00351B' }}>
               <Calendar size={20} />
-              <span>{selectedRange}</span>
+              <span>{rangeLabels[selectedRange]}</span>
             </div>
             <div className="flex items-center gap-2 rounded-full bg-[var(--dp-lime-100)] px-4 py-2 text-sm font-medium text-[var(--dp-green-950)]">
               {selectedRange === 'សប្តាហ៍នេះ' ? (
@@ -271,7 +280,7 @@ export default function DashboardHome() {
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                {label}
+                {rangeLabels[label]}
               </button>
             ))}
           </div>
@@ -282,8 +291,8 @@ export default function DashboardHome() {
 
       {/* 3. Sales Performance Chart */}
       <DashboardChart
-        title="ស្ថិតិនៃការលក់"
-        subtitle={currentVariant.chartSubtitle}
+        title={t('salesStats')}
+        subtitle={t(currentVariant.chartSubtitle)}
         data={currentVariant.chartData}
         selectedRange={selectedRange}
         rangeOptions={rangeOptions}
@@ -292,7 +301,7 @@ export default function DashboardHome() {
 
       {/* 4. Order Status Summary */}
       <section className="rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-        <h3 className="text-base font-semibold text-slate-900">ត្រូវចាត់វិធានការ</h3>
+        <h3 className="text-base font-semibold text-slate-900">{t('needsAction')}</h3>
         <div className="mt-4 flex flex-col gap-3 sm:grid sm:grid-cols-3">
         {orderStatusCards.map((card) => {
           const Icon = card.icon
@@ -302,7 +311,7 @@ export default function DashboardHome() {
                 <Icon size={28} />
               </span>
               <div>
-                <p className="text-sm font-medium text-slate-600">{card.label}</p>
+                <p className="text-sm font-medium text-slate-600">{t(card.label)}</p>
                 <p className="mt-1 text-3xl font-bold text-[var(--dp-green-950)]">{card.count}</p>
               </div>
             </div>
@@ -314,7 +323,7 @@ export default function DashboardHome() {
       {/* 5 & 6. Payment Status + Order Source Analytics */}
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-          <h3 className="text-base font-semibold text-slate-900">ស្ថានភាពទូទាត់</h3>
+          <h3 className="text-base font-semibold text-slate-900">{t('paymentStatus')}</h3>
           <div className="mt-4 flex items-center gap-6">
             <div className="h-[140px] w-[140px] shrink-0">
               <DonutChart data={paymentStatusData} />
@@ -324,7 +333,7 @@ export default function DashboardHome() {
                 <div key={d.label} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: d.color }} />
-                    <span className="text-slate-600">{d.label}</span>
+                    <span className="text-slate-600">{t(d.label)}</span>
                   </div>
                   <div className="text-right">
                     <span className="font-medium text-slate-900">{d.value}%</span>
@@ -337,7 +346,7 @@ export default function DashboardHome() {
         </section>
 
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-          <h3 className="text-base font-semibold text-slate-900">ប្រភពការបញ្ជាទិញ</h3>
+          <h3 className="text-base font-semibold text-slate-900">{t('orderSource')}</h3>
           <div className="mt-4 flex items-center gap-6">
             <div className="h-[140px] w-[140px] shrink-0">
               <DonutChart data={orderSourceData} />
@@ -347,7 +356,7 @@ export default function DashboardHome() {
                 <div key={d.label} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: d.color }} />
-                    <span className="text-slate-600">{d.label}</span>
+                    <span className="text-slate-600">{t(d.label)}</span>
                   </div>
                   <span className="font-medium text-slate-900">{d.value}%</span>
                 </div>
@@ -361,8 +370,8 @@ export default function DashboardHome() {
       <div className="grid gap-4 lg:grid-cols-3">
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold text-slate-900">ទំនិញលក់ដាច់</h3>
-            <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">លម្អិត</button>
+            <h3 className="text-base font-semibold text-slate-900">{t('bestSelling')}</h3>
+            <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">{t('details')}</button>
           </div>
           <div className="mt-5 space-y-4">
             {bestSellingProducts.map((product) => (
@@ -384,8 +393,8 @@ export default function DashboardHome() {
 
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold text-slate-900">ទំនិញជិតអស់ស្តុក</h3>
-            <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">លម្អិត</button>
+            <h3 className="text-base font-semibold text-slate-900">{t('lowStock')}</h3>
+            <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">{t('details')}</button>
           </div>
           <div className="mt-5 space-y-4">
             {lowStockProducts.map((product) => (
@@ -393,10 +402,10 @@ export default function DashboardHome() {
                 <ProductImage src={product.image} name={product.name} />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-900">{product.name}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">សល់: {product.stock}</p>
+                  <p className="mt-0.5 text-xs text-slate-500">{t('remaining_stock')}: {product.stock}</p>
                 </div>
                 <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold text-white ${product.statusColor}`}>
-                  {product.status === 'Low Stock' ? 'ជិតអស់' : 'អស់ស្តុក'}
+                  {product.status === 'Low Stock' ? t('lowStockLabel') : t('outOfStock')}
                 </span>
               </div>
             ))}
@@ -405,8 +414,8 @@ export default function DashboardHome() {
 
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold text-slate-900">អតិថិជនចំណាយច្រើនជាងគេ</h3>
-            <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">លម្អិត</button>
+            <h3 className="text-base font-semibold text-slate-900">{t('topCustomers')}</h3>
+            <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">{t('details')}</button>
           </div>
           <div className="mt-5 space-y-4">
             {topCustomers.map((customer) => (
@@ -414,7 +423,7 @@ export default function DashboardHome() {
                 <AvatarImage src={customer.image} name={customer.name} />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-900">{customer.name}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">{customer.orders} ការកម្មង់</p>
+                  <p className="mt-0.5 text-xs text-slate-500">{t('itemCount', { count: customer.orders })}</p>
                 </div>
                 <p className="text-sm font-semibold text-slate-900">{customer.spent}</p>
               </div>

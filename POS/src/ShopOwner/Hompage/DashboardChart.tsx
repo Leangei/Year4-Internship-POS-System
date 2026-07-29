@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 type ChartDataPoint = {
   label: string
   value: number
@@ -13,6 +15,7 @@ type DashboardChartProps = {
 }
 
 export default function DashboardChart({ title, subtitle, data, selectedRange, rangeOptions, onRangeChange }: DashboardChartProps) {
+  const { t } = useTranslation("homepage")
   const maxValue = Math.max(...data.map((point) => point.value), 0)
   const minValue = 0
   const minX = 50
@@ -36,9 +39,9 @@ export default function DashboardChart({ title, subtitle, data, selectedRange, r
     .join(' ')
 
   const rangeLabels: Record<string, string> = {
-    'ថ្ងៃនេះ': 'ថ្ងៃ',
-    'សប្តាហ៍នេះ': 'សប្តាហ៍',
-    'ខែនេះ': 'ខែ',
+    'ថ្ងៃនេះ': t('day'),
+    'សប្តាហ៍នេះ': t('week'),
+    'ខែនេះ': t('month'),
   }
 
   return (
