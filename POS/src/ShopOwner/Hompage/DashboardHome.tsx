@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Clock, Wallet, Package, DollarSign, Box, Truck, CreditCard, Calendar, type LucideIcon } from 'lucide-react'
 import DashboardKpiGrid from './DashboardKpiGrid'
-import DashboardChart from './DashboardChart'
+import DashboardChart from './DashboardChart.tsx'
 
 type DashboardRange = 'ថ្ងៃនេះ' | 'សប្តាហ៍នេះ' | 'ខែនេះ'
 type DashboardVariant = {
@@ -267,7 +267,7 @@ export default function DashboardHome() {
                 onClick={() => setSelectedRange(label)}
                 className={`rounded-[10px] px-4 py-2 text-sm font-medium transition ${
                   label === selectedRange
-                    ? 'bg-[var(--dp-green-950)] text-white'
+                    ? 'bg-[#BAF911] text-[#00351B]'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -278,21 +278,22 @@ export default function DashboardHome() {
         </div>
       </section>
 
-      {/* 2. KPI Cards - each card separate */}
       <DashboardKpiGrid cards={currentVariant.kpiCards} />
 
       {/* 3. Sales Performance Chart */}
       <DashboardChart
         title="ស្ថិតិនៃការលក់"
         subtitle={currentVariant.chartSubtitle}
-        buttonLabel="ថ្មី"
         data={currentVariant.chartData}
+        selectedRange={selectedRange}
+        rangeOptions={rangeOptions}
+        onRangeChange={(range) => setSelectedRange(range as DashboardRange)}
       />
 
-      {/* 4. Order Status Summary - each card separate */}
+      {/* 4. Order Status Summary */}
       <section className="rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
         <h3 className="text-base font-semibold text-slate-900">ត្រូវចាត់វិធានការ</h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        <div className="mt-4 flex flex-col gap-3 sm:grid sm:grid-cols-3">
         {orderStatusCards.map((card) => {
           const Icon = card.icon
           return (

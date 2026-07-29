@@ -6,11 +6,13 @@ type ChartDataPoint = {
 type DashboardChartProps = {
   title: string
   subtitle: string
-  buttonLabel: string
   data: ChartDataPoint[]
+  selectedRange: string
+  rangeOptions: string[]
+  onRangeChange: (range: string) => void
 }
 
-export default function DashboardChart({ title, subtitle, buttonLabel, data }: DashboardChartProps) {
+export default function DashboardChart({ title, subtitle, data, selectedRange, rangeOptions, onRangeChange }: DashboardChartProps) {
   const maxValue = Math.max(...data.map((point) => point.value), 0)
   const minValue = 0
   const minX = 50
@@ -33,6 +35,12 @@ export default function DashboardChart({ title, subtitle, buttonLabel, data }: D
     .map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)} ${c.y.toFixed(1)}`)
     .join(' ')
 
+  const rangeLabels: Record<string, string> = {
+    'ថ្ងៃនេះ': 'ថ្ងៃ',
+    'សប្តាហ៍នេះ': 'សប្តាហ៍',
+    'ខែនេះ': 'ខែ',
+  }
+
   return (
     <section className="rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
       <div className="flex items-center justify-between">
@@ -40,9 +48,22 @@ export default function DashboardChart({ title, subtitle, buttonLabel, data }: D
           <h2 className="text-base font-semibold text-slate-900">{title}</h2>
           <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
         </div>
-        <button className="rounded-[10px] bg-[var(--dp-green-950)] px-4 py-2 text-sm font-medium text-white">
-          {buttonLabel}
-        </button>
+        <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
+          {rangeOptions.map((range) => (
+            <button
+              key={range}
+              type="button"
+              onClick={() => onRangeChange(range)}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                range === selectedRange
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              {rangeLabels[range] || range}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="mt-6 overflow-x-auto rounded-[16px] bg-[#F8F9FA] p-4">
         <svg viewBox="0 0 720 240" className="h-[280px] min-w-[720px] w-full" preserveAspectRatio="xMidYMid meet">
@@ -84,7 +105,7 @@ export default function DashboardChart({ title, subtitle, buttonLabel, data }: D
             )
           })}
 
-          {coords.map((coord, index) => (
+          {coords.map((coord) => (
             <g key={coord.point.label}>
               <text
                 x={coord.x}
