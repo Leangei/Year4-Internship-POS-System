@@ -48,7 +48,7 @@ export default function Navbar({ userName, onMobileMenuToggle, showMobileMenuBut
 
         {/* Right: Store photo only — flush to right edge */}
         <div
-          className="flex items-center gap-2 px-3 lg:px-5 py-2 lg:hidden"
+          className="flex items-center gap-2 px-3 lg:px-5 py-2 lg:hidden border-l border-white/30"
           style={{
             background: '#BAF912',
             borderTopLeftRadius: '30px',

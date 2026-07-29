@@ -1,33 +1,138 @@
-import { Clock, Wallet, Package, DollarSign, Box, Truck, CreditCard, TrendingUp, Calendar } from 'lucide-react'
+import { useState } from 'react'
+import { Clock, Wallet, Package, DollarSign, Box, Truck, CreditCard, Calendar, type LucideIcon } from 'lucide-react'
+import DashboardKpiGrid from './DashboardKpiGrid'
+import DashboardChart from './DashboardChart'
 
-const kpiCards = [
-  {
-    title: 'ចំណូលសរុប',
-    value: '$12,450.00',
-    icon: Wallet,
-    bg: 'bg-[var(--dp-green-950)] text-white',
-    subtitle: '+15% ពីខែមុន',
+type DashboardRange = 'ថ្ងៃនេះ' | 'សប្តាហ៍នេះ' | 'ខែនេះ'
+type DashboardVariant = {
+  kpiCards: {
+    title: string
+    value: string
+    icon: LucideIcon
+    bg: string
+    subtitle: string
+  }[]
+  chartData: { label: string; value: number }[]
+  chartSubtitle: string
+}
+
+const rangeOptions: DashboardRange[] = ['ថ្ងៃនេះ', 'សប្តាហ៍នេះ', 'ខែនេះ']
+
+const dashboardVariants: Record<DashboardRange, DashboardVariant> = {
+  'ថ្ងៃនេះ': {
+    kpiCards: [
+      {
+        title: 'ចំណូលសរុប',
+        value: '$12,450.00',
+        icon: Wallet,
+        bg: 'bg-[#064E2B] text-white',
+        subtitle: '+15% ពីខែមុន',
+      },
+      {
+        title: 'ការកម្មង់សរុប',
+        value: '128',
+        icon: Package,
+        bg: 'bg-white text-slate-900',
+        subtitle: '18 កំពុងរង់ចាំ',
+      },
+      {
+        title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
+        value: '$97.27',
+        icon: DollarSign,
+        bg: 'bg-white text-slate-900',
+        subtitle: 'ធម្មតា',
+      },
+    ],
+    chartData: [
+      { label: '6AM', value: 15 },
+      { label: '7AM', value: 28 },
+      { label: '8AM', value: 45 },
+      { label: '9AM', value: 72 },
+      { label: '10AM', value: 95 },
+      { label: '11AM', value: 120 },
+      { label: '12PM', value: 110 },
+      { label: '1PM', value: 85 },
+      { label: '2PM', value: 100 },
+      { label: '3PM', value: 130 },
+      { label: '4PM', value: 155 },
+      { label: '5PM', value: 170 },
+      { label: '6PM', value: 140 },
+    ],
+    chartSubtitle: 'ស្ថិតិប្រចាំថ្ងៃសម្រាប់ថ្ងៃនេះ',
   },
-  {
-    title: 'ការបញ្ជាទិញ',
-    value: '128',
-    icon: Package,
-    bg: 'bg-white text-slate-900',
-    subtitle: '18 កំពុងរង់ចាំ',
+  'សប្តាហ៍នេះ': {
+    kpiCards: [
+      {
+        title: 'ចំណូលសរុប',
+        value: '$78,340.00',
+        icon: Wallet,
+        bg: 'bg-[#064E2B] text-white',
+        subtitle: '+12% ពីសប្តាហ៍មុន',
+      },
+      {
+        title: 'ការកម្មង់សរុប',
+        value: '912',
+        icon: Package,
+        bg: 'bg-white text-slate-900',
+        subtitle: '47 កំពុងរង់ចាំ',
+      },
+      {
+        title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
+        value: '$85.92',
+        icon: DollarSign,
+        bg: 'bg-white text-slate-900',
+        subtitle: 'សប្តាហ៍នេះ',
+      },
+    ],
+    chartData: [
+      { label: 'ច័ន្ទ', value: 650 },
+      { label: 'អង្គារ', value: 820 },
+      { label: 'ពុធ', value: 700 },
+      { label: 'ព្រហស្បតិ៍', value: 950 },
+      { label: 'សុក្រ', value: 1_090 },
+      { label: 'សៅរ៍', value: 1_230 },
+      { label: 'អាទិត្យ', value: 980 },
+    ],
+    chartSubtitle: 'ស្ថិតិប្រចាំសប្តាហ៍នេះ',
   },
-  {
-    title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
-    value: '$97.27',
-    icon: DollarSign,
-    bg: 'bg-white text-slate-900',
-    subtitle: 'ធម្មតា',
+  'ខែនេះ': {
+    kpiCards: [
+      {
+        title: 'ចំណូលសរុប',
+        value: '$312,800.00',
+        icon: Wallet,
+        bg: 'bg-[#064E2B] text-white',
+        subtitle: '+18% ពីខែមុន',
+      },
+      {
+        title: 'ការកម្មង់សរុប',
+        value: '3,540',
+        icon: Package,
+        bg: 'bg-white text-slate-900',
+        subtitle: '120 កំពុងរង់ចាំ',
+      },
+      {
+        title: 'តម្លៃមធ្យមក្នុងមួយការកម្មង់',
+        value: '$88.33',
+        icon: DollarSign,
+        bg: 'bg-white text-slate-900',
+        subtitle: 'ខែនេះ',
+      },
+    ],
+    chartData: [
+      { label: 'សប្តាហ៍ 1', value: 2_800 },
+      { label: 'សប្តាហ៍ 2', value: 3_100 },
+      { label: 'សប្តាហ៍ 3', value: 2_950 },
+      { label: 'សប្តាហ៍ 4', value: 3_320 },
+    ],
+    chartSubtitle: 'ស្ថិតិប្រចាំខែនេះ',
   },
-]
+}
 
 const orderStatusCards = [
   { label: 'មិនទាន់បង់ប្រាក់', count: 12, icon: CreditCard },
-  { label: 'កំពុងវេចខ្ចប់', count: 8, icon: Box },
-  { label: 'កំពុងដឹកជញ្ជូន', count: 5, icon: Truck },
+  { label: 'មិនទាន់វេចខ្ចប់', count: 8, icon: Box },
+  { label: 'មិនទាន់ដឹកជញ្ជូន', count: 5, icon: Truck },
 ]
 
 const paymentStatusData = [
@@ -43,25 +148,27 @@ const orderSourceData = [
 ]
 
 const bestSellingProducts = [
-  { name: 'Doir Lipstick', sold: 102, progress: 100 },
-  { name: 'Top T-shirt', sold: 90, progress: 88 },
-  { name: 'Pink Pant', sold: 76, progress: 75 },
-  { name: 'Cap', sold: 50, progress: 50 },
-  { name: 'P-Shoe', sold: 30, progress: 30 },
+  { name: 'Doir Lipstick', sold: 102, progress: 100, image: '/src/assets/product/dior lipstick.svg' },
+  { name: 'Top T-shirt', sold: 90, progress: 88, image: '/src/assets/product/t-shirt.svg' },
+  { name: 'Pink Pant', sold: 76, progress: 75, image: '/src/assets/product/pink pant.svg' },
+  { name: 'Cap', sold: 50, progress: 50, image: '/src/assets/product/cap.svg' },
+  { name: 'P-Shoe', sold: 30, progress: 30, image: '/src/assets/product/p-shoe.svg' },
 ]
 
 const lowStockProducts = [
-  { name: 'Doir Lipstick', stock: 5, status: 'Low Stock', statusColor: 'bg-amber-500' },
-  { name: 'Top T-shirt', stock: 2, status: 'Low Stock', statusColor: 'bg-amber-500' },
-  { name: 'Pink Pant', stock: 0, status: 'Out of Stock', statusColor: 'bg-red-500' },
-  { name: 'Cap', stock: 8, status: 'Low Stock', statusColor: 'bg-amber-500' },
+  { name: 'Doir Lipstick', stock: 5, status: 'Low Stock', statusColor: 'bg-amber-500', image: '/src/assets/product/dior lipstick.svg' },
+  { name: 'Top T-shirt', stock: 2, status: 'Low Stock', statusColor: 'bg-amber-500', image: '/src/assets/product/t-shirt.svg' },
+  { name: 'Pink Pant', stock: 0, status: 'Out of Stock', statusColor: 'bg-red-500', image: '/src/assets/product/pink pant.svg' },
+  { name: 'Cap', stock: 8, status: 'Low Stock', statusColor: 'bg-amber-500', image: '/src/assets/product/cap.svg' },
+  { name: 'P-Shoe', stock: 3, status: 'Low Stock', statusColor: 'bg-amber-500', image: '/src/assets/product/p-shoe.svg' },
 ]
 
 const topCustomers = [
-  { name: 'យ៉ូន ស្រី', orders: 15, spent: '$1,250.00' },
-  { name: 'ស្រី សុភា', orders: 12, spent: '$980.00' },
-  { name: 'សុខ ឆៃ', orders: 10, spent: '$875.00' },
-  { name: 'រិន ណារ៉ា', orders: 8, spent: '$720.00' },
+  { name: 'គីម ឆេង', orders: 15, spent: '$1,250.00', image: '/src/assets/customer/គីម ឆេង.svg' },
+  { name: 'គីម តារ៉ា', orders: 12, spent: '$980.00', image: '/src/assets/customer/គីម តារ៉ា.svg' },
+  { name: 'គីម សុខ', orders: 10, spent: '$875.00', image: '/src/assets/customer/គីម សុខ.svg' },
+  { name: 'សុខ កញ្ញា', orders: 8, spent: '$720.00', image: '/src/assets/customer/សុខ កញ្ញា.svg' },
+  { name: 'សុខ នីតា', orders: 6, spent: '$540.00', image: '/src/assets/customer/សុខ នីតា.svg' },
 ]
 
 function DonutChart({ data }: { data: { label: string; value: number; color: string }[] }) {
@@ -103,25 +210,30 @@ function DonutChart({ data }: { data: { label: string; value: number; color: str
   )
 }
 
-function ProductImagePlaceholder({ name }: { name: string }) {
-  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2)
+function ProductImage({ src, name }: { src: string; name: string }) {
   return (
-    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[10px] bg-[#BAF912] text-xs font-bold text-[#00351B]">
-      {initials}
-    </span>
+    <img
+      src={src}
+      alt={name}
+      className="h-10 w-10 shrink-0 rounded-[10px] object-cover bg-[#F8F9FA]"
+    />
   )
 }
 
-function AvatarPlaceholder({ name }: { name: string }) {
-  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2)
+function AvatarImage({ src, name }: { src: string; name: string }) {
   return (
-    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#BAF912] text-xs font-bold text-[#00351B]">
-      {initials}
-    </span>
+    <img
+      src={src}
+      alt={name}
+      className="h-10 w-10 shrink-0 rounded-full object-cover bg-[#F8F9FA]"
+    />
   )
 }
 
 export default function DashboardHome() {
+  const [selectedRange, setSelectedRange] = useState<DashboardRange>('ថ្ងៃនេះ')
+  const currentVariant = dashboardVariants[selectedRange]
+
   return (
     <div className="flex flex-col gap-8">
       {/* 1. Dashboard Summary */}
@@ -130,19 +242,31 @@ export default function DashboardHome() {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2" style={{ fontSize: '20px', fontWeight: 700, color: '#00351B' }}>
               <Calendar size={20} />
-              <span>ប្រចាំថ្ងៃ</span>
+              <span>{selectedRange}</span>
             </div>
             <div className="flex items-center gap-2 rounded-full bg-[var(--dp-lime-100)] px-4 py-2 text-sm font-medium text-[var(--dp-green-950)]">
-              <Clock size={16} />
-              <span>07:00 AM – 06:00 PM</span>
+              {selectedRange === 'សប្តាហ៍នេះ' ? (
+                <Calendar size={16} />
+              ) : (
+                <Clock size={16} />
+              )}
+              <span>
+                {selectedRange === 'សប្តាហ៍នេះ'
+                  ? '24 តុលា 2023 - 31 តុលា 2023'
+                  : selectedRange === 'ខែនេះ'
+                  ? 'ខែ តុលា'
+                  : '07:00 AM – 06:00 PM'}
+              </span>
             </div>
           </div>
           <div className="flex gap-2">
-            {['ថ្ងៃនេះ', 'សប្តាហ៍នេះ', 'ខែនេះ'].map((label) => (
+            {rangeOptions.map((label) => (
               <button
                 key={label}
+                type="button"
+                onClick={() => setSelectedRange(label)}
                 className={`rounded-[10px] px-4 py-2 text-sm font-medium transition ${
-                  label === 'ថ្ងៃនេះ'
+                  label === selectedRange
                     ? 'bg-[var(--dp-green-950)] text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
@@ -155,65 +279,20 @@ export default function DashboardHome() {
       </section>
 
       {/* 2. KPI Cards - each card separate */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        {kpiCards.map((card) => {
-          const Icon = card.icon
-          return (
-            <div key={card.title} className={`rounded-[20px] p-5 shadow-[var(--dp-shadow-card)] ${card.bg}`}>
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium opacity-80">{card.title}</p>
-                <span className={`grid h-11 w-11 place-items-center rounded-2xl ${card.bg === 'bg-[var(--dp-green-950)] text-white' ? 'bg-white/10' : 'bg-[var(--dp-lime-100)]'} text-current`}>
-                  <Icon size={20} />
-                </span>
-              </div>
-              <p className="mt-4 text-3xl font-bold">{card.value}</p>
-              <p className={`mt-1 text-xs ${card.bg === 'bg-[var(--dp-green-950)] text-white' ? 'text-[var(--dp-lime-100)]' : 'text-slate-500'}`}>{card.subtitle}</p>
-            </div>
-          )
-        })}
-      </div>
+      <DashboardKpiGrid cards={currentVariant.kpiCards} />
 
       {/* 3. Sales Performance Chart */}
-      <section className="rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-base font-semibold text-slate-900">ការអនុវត្តការលក់</h2>
-            <p className="mt-1 text-sm text-slate-500">ទិន្នន័យតាមម៉ោង</p>
-          </div>
-          <button className="rounded-[10px] bg-[var(--dp-green-950)] px-4 py-2 text-sm font-medium text-white">
-            <TrendingUp size={16} className="inline mr-1" />
-            ថ្មី
-          </button>
-        </div>
-        <div className="mt-6 h-[240px] rounded-[16px] bg-[#F8F9FA] p-4">
-          <svg viewBox="0 0 720 200" className="h-full w-full">
-            <defs>
-              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#16A34A" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#16A34A" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            {[40, 80, 120, 160].map((y) => (
-              <line key={y} x1="40" y1={y} x2="700" y2={y} stroke="#E7E8E9" strokeWidth="1" />
-            ))}
-            <path d="M40 160 C120 140 200 120 280 100 C360 80 440 90 520 70 C600 50 660 60 700 50 L700 190 L40 190 Z" fill="url(#areaGrad)" />
-            <path d="M40 160 C120 140 200 120 280 100 C360 80 440 90 520 70 C600 50 660 60 700 50" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" />
-            {[40, 150, 260, 370, 480, 590, 700].map((cx, i) => {
-              const cy = [160, 140, 120, 100, 80, 70, 50][i]
-              return <circle key={cx} cx={cx} cy={cy} r="5" fill="#16A34A" stroke="white" strokeWidth="2" />
-            })}
-            {['6AM', '8AM', '10AM', '12PM', '2PM', '4PM', '6PM'].map((label, i) => (
-              <text key={label} x={[40, 150, 260, 370, 480, 590, 700][i]} y="190" textAnchor="middle" fontSize="11" fill="#666">{label}</text>
-            ))}
-            {['$0', '$500', '$1,000', '$1,500'].map((label, i) => (
-              <text key={label} x="32" y={[185, 145, 105, 65][i]} textAnchor="end" fontSize="11" fill="#666">{label}</text>
-            ))}
-          </svg>
-        </div>
-      </section>
+      <DashboardChart
+        title="ស្ថិតិនៃការលក់"
+        subtitle={currentVariant.chartSubtitle}
+        buttonLabel="ថ្មី"
+        data={currentVariant.chartData}
+      />
 
       {/* 4. Order Status Summary - each card separate */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <section className="rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
+        <h3 className="text-base font-semibold text-slate-900">ត្រូវចាត់វិធានការ</h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
         {orderStatusCards.map((card) => {
           const Icon = card.icon
           return (
@@ -229,6 +308,7 @@ export default function DashboardHome() {
           )
         })}
       </div>
+      </section>
 
       {/* 5 & 6. Payment Status + Order Source Analytics */}
       <div className="grid gap-4 lg:grid-cols-2">
@@ -277,7 +357,7 @@ export default function DashboardHome() {
       </div>
 
       {/* 7. Best-Selling Products */}
-      <div className="grid gap-4 xl:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3">
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-semibold text-slate-900">ទំនិញលក់ដាច់</h3>
@@ -286,14 +366,14 @@ export default function DashboardHome() {
           <div className="mt-5 space-y-4">
             {bestSellingProducts.map((product) => (
               <div key={product.name} className="flex items-center gap-3">
-                <ProductImagePlaceholder name={product.name} />
+                <ProductImage src={product.image} name={product.name} />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-slate-900">{product.name}</p>
                     <p className="text-sm font-medium text-slate-900">{product.sold}</p>
                   </div>
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
-                    <div className="h-full rounded-full bg-[var(--dp-green-950)]" style={{ width: `${product.progress}%` }} />
+                    <div className="h-full rounded-full bg-[#9AF672]" style={{ width: `${product.progress}%` }} />
                   </div>
                 </div>
               </div>
@@ -309,7 +389,7 @@ export default function DashboardHome() {
           <div className="mt-5 space-y-4">
             {lowStockProducts.map((product) => (
               <div key={product.name} className="flex items-center gap-3">
-                <ProductImagePlaceholder name={product.name} />
+                <ProductImage src={product.image} name={product.name} />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-900">{product.name}</p>
                   <p className="mt-0.5 text-xs text-slate-500">សល់: {product.stock}</p>
@@ -324,13 +404,13 @@ export default function DashboardHome() {
 
         <section className="h-full rounded-[20px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold text-slate-900">អតិថិជនពេញចិត្ត</h3>
+            <h3 className="text-base font-semibold text-slate-900">អតិថិជនចំណាយច្រើនជាងគេ</h3>
             <button className="rounded-[10px] border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">លម្អិត</button>
           </div>
           <div className="mt-5 space-y-4">
             {topCustomers.map((customer) => (
               <div key={customer.name} className="flex items-center gap-3">
-                <AvatarPlaceholder name={customer.name} />
+                <AvatarImage src={customer.image} name={customer.name} />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-900">{customer.name}</p>
                   <p className="mt-0.5 text-xs text-slate-500">{customer.orders} ការកម្មង់</p>

@@ -7,16 +7,16 @@ export default function SuperAdminLayout() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--dp-page)] text-[var(--dp-body)]">
-      {/* Desktop sidebar - full height */}
-      <div className="hidden lg:block h-screen">
+    <div className="relative flex h-screen overflow-hidden bg-[var(--dp-page)] text-[var(--dp-body)]">
+      {/* Desktop sidebar - pinned to the left while content scrolls */}
+      <div className="hidden lg:block fixed inset-y-0 left-0 w-[276px] z-20">
         <div className="h-full">
           <SuperAdminSidebar />
         </div>
       </div>
 
       {/* Main content area */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4 lg:p-6">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4 lg:p-6 lg:ml-[276px]">
         {/* Mobile top bar with hamburger */}
         <div className="flex lg:hidden items-center gap-3 mb-4">
           <button
