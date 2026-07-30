@@ -16,9 +16,9 @@ export default function SuperAdminLayout() {
       </div>
 
       {/* Main content area */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4 lg:p-6 lg:ml-[276px]">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-2 sm:p-3 lg:p-6 lg:ml-[276px]">
         {/* Mobile top bar with hamburger */}
-        <div className="flex lg:hidden items-center gap-3 mb-4">
+        <div className="flex lg:hidden items-center gap-3 mb-3 sm:mb-4">
           <button
             type="button"
             onClick={() => setMobileSidebarOpen(true)}
@@ -38,7 +38,7 @@ export default function SuperAdminLayout() {
           </span>
         </div>
 
-        <main className="min-h-0 flex-1 overflow-y-auto rounded-[var(--dp-r-panel)] bg-[var(--dp-white)] shadow-[var(--dp-shadow-card)] p-6">
+        <main className="min-h-0 flex-1 overflow-y-auto rounded-[var(--dp-r-panel)] bg-[var(--dp-page)] p-2 sm:p-3 lg:p-6">
           <Outlet />
         </main>
       </div>

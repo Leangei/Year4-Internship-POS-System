@@ -10,88 +10,19 @@ import {
   ShieldCheck,
   Store,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
-const actionButtons = [
-  { label: 'បង្កើតហាង', icon: PlusCircle, variant: 'solid' },
-  { label: 'បង្កើតផែនការ', icon: PlusCircle, variant: 'outline' },
-]
+import demoShopImg from '../../assets/shop/Demo Shop.svg'
+import nearyFashionImg from '../../assets/shop/NearyFashion.svg'
+import oldRetailImg from '../../assets/shop/Old Retail.svg'
+import psarOnlineImg from '../../assets/shop/Psar Online.svg'
 
-const kpiCards = [
-  {
-    title: 'ចំណូលសរុប',
-    value: '$4,820',
-    detail: '+8.2% ទៅសប្តាហ៍មុន',
-    icon: DollarSign,
-    accent: 'bg-[#134F07] text-white',
-  },
-  {
-    title: 'ចំនួនហាង',
-    value: '128',
-    detail: '+10 ហាងថ្មីក្នុងរយៈពេលនេះ',
-    icon: Store,
-    accent: 'bg-[#BAF912] text-slate-900',
-  },
-  {
-    title: 'កម្មវិធីជាវសកម្ម',
-    value: '96',
-    detail: '+5 សប្តាហ៍នេះ',
-    icon: ShieldCheck,
-    accent: 'bg-[#134F07] text-white',
-  },
-  {
-    title: 'កម្មវិធីជាវនឹងផុតកំណត់',
-    value: '5',
-    detail: '+8.2% ពីសប្តាហ៍មុន',
-    icon: Clock,
-    accent: 'bg-[#BAF912] text-slate-900',
-  },
-]
-
-const registrationData = [
-  { label: '10 មិថុនា', value: 5 },
-  { label: '11 មិថុនា', value: 8 },
-  { label: '12 មិថុនា', value: 6 },
-  { label: '13 មិថុនា', value: 10, highlight: true },
-  { label: '14 មិថុនា', value: 7 },
-  { label: '15 មិថុនា', value: 12 },
-  { label: '16 មិថុនា', value: 9 },
-]
-
-const subscriptionDistribution = [
-  { label: 'មូលដ្ឋាន', value: 45, color: '#16A34A' },
-  { label: 'ស្តង់ដារ', value: 32, color: '#84CC16' },
-  { label: 'ពិចារណា', value: 23, color: '#65A30D' },
-]
-
-const recentShops = [
-  { name: 'New Business', owner: 'Testing Owner', date: '15/06/2026', status: 'សកម្ម' },
-  { name: 'Demo Shop', owner: 'Admin Demo', date: '12/06/2026', status: 'កំពុងរង់ចាំ' },
-  { name: 'Psar Online', owner: 'Mr. Srey', date: '10/06/2026', status: 'សកម្ម' },
-  { name: 'Ola Retail Co.', owner: 'Demo Admin', date: '08/06/2026', status: 'ផុតកំណត់' },
-]
-
-const recentActivities = [
-  {
-    icon: AlertTriangle,
-    title: 'កម្មវិធីជាវនឹងផុតកំណត់',
-    details: 'កម្មវិធីជាវរបស់ Demo Shop នឹងផុតកំណត់នៅក្នុង 3 ថ្ងៃ',
-  },
-  {
-    icon: CheckCircle,
-    title: 'ហាងថ្មីបានចុះឈ្មោះ',
-    details: 'New Business បានចូលលើផ្លាតហ្វូមថ្ងៃនេះ',
-  },
-  {
-    icon: Bell,
-    title: 'ដែនកំណត់ផ្ទុកបានដល់',
-    details: 'Psar Online បានដល់ 85% នៃដែនកំណត់ផ្ទុក',
-  },
-  {
-    icon: Activity,
-    title: 'សារ​សេវា​ជំនួយ​បានទទួល',
-    details: 'សំបុត្រជំនួយថ្មីមកពី Demo Shop',
-  },
-]
+const shopImages: Record<string, string> = {
+  'Demo Shop': demoShopImg,
+  'Neary Fashion': nearyFashionImg,
+  'Psar Online': psarOnlineImg,
+  'Ola Retail Co.': oldRetailImg,
+}
 
 function DonutChart({ data }: { data: { label: string; value: number; color: string }[] }) {
   const total = data.reduce((sum, item) => sum + item.value, 0)
@@ -99,13 +30,20 @@ function DonutChart({ data }: { data: { label: string; value: number; color: str
   const circumference = 2 * Math.PI * radius
 
   return (
-    <svg viewBox="0 0 160 160" className="h-full w-full">
+    <svg viewBox="0 0 160 160" className="h-full w-full drop-shadow-sm">
+      <defs>
+        {data.map((item, i) => (
+          <filter key={item.label} id={`donut-glow-${i}`}>
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor={item.color} floodOpacity="0.3" />
+          </filter>
+        ))}
+      </defs>
       {data.reduce<{ label: string; value: number; color: string; start: number; end: number }[]>((acc, item) => {
         const start = acc.length > 0 ? acc[acc.length - 1].end : 0
         const end = start + item.value
         acc.push({ ...item, start, end })
         return acc
-      }, []).map((segment) => {
+      }, []).map((segment, i) => {
         const offset = (segment.start / total) * circumference
         const length = (segment.value / total) * circumference
         return (
@@ -121,191 +59,306 @@ function DonutChart({ data }: { data: { label: string; value: number; color: str
             strokeDashoffset={-offset}
             transform="rotate(-90 80 80)"
             strokeLinecap="round"
+            filter={`url(#donut-glow-${i})`}
+            className="transition-all duration-500 ease-out hover:stroke-[28] hover:brightness-110"
+            style={{ cursor: 'pointer' }}
           />
         )
       })}
-      <circle cx="80" cy="80" r="36" fill="white" />
-      <text x="80" y="76" textAnchor="middle" fontSize="20" fontWeight="700" fill="#111">120</text>
-      <text x="80" y="94" textAnchor="middle" fontSize="10" fill="#667085">ផែនការ</text>
+      {/* Inner ring decoration */}
+      <circle cx="80" cy="80" r="36" fill="white" stroke="#E8F5E9" strokeWidth="1" />
+      <text x="80" y="74" textAnchor="middle" fontSize="22" fontWeight="800" fill="#134F07" fontFamily="'Noto Sans Khmer', sans-serif">120</text>
+      <text x="80" y="94" textAnchor="middle" fontSize="10" fill="#667085" fontWeight="500" fontFamily="'Noto Sans Khmer', sans-serif">ផែនការ</text>
     </svg>
   )
 }
 
 export default function SuperAdminDashboardPage() {
+  const { t } = useTranslation('homepage')
+
+  const actionButtons = [
+    { label: t('superAdmin.createShop'), icon: PlusCircle, variant: 'solid' },
+    { label: t('superAdmin.createPlan'), icon: PlusCircle, variant: 'outline' },
+  ]
+
+  const kpiCards = [
+    {
+      title: t('superAdmin.totalRevenue'),
+      value: '$4,820',
+      detail: t('superAdmin.totalRevenueDetail'),
+      icon: DollarSign,
+      accent: 'bg-[#134F07] text-white',
+    },
+    {
+      title: t('superAdmin.shopCount'),
+      value: '128',
+      detail: t('superAdmin.shopCountDetail'),
+      icon: Store,
+      accent: 'bg-[#BAF912] text-slate-900',
+    },
+    {
+      title: t('superAdmin.activeSubscriptions'),
+      value: '96',
+      detail: t('superAdmin.activeSubscriptionsDetail'),
+      icon: ShieldCheck,
+      accent: 'bg-[#134F07] text-white',
+    },
+    {
+      title: t('superAdmin.expiringSubscriptions'),
+      value: '5',
+      detail: t('superAdmin.expiringSubscriptionsDetail'),
+      icon: Clock,
+      accent: 'bg-[#BAF912] text-slate-900',
+    },
+  ]
+
+  const registrationData = [
+    { label: t('superAdmin.monthJan'), value: 45 },
+    { label: t('superAdmin.monthFeb'), value: 52 },
+    { label: t('superAdmin.monthMar'), value: 38 },
+    { label: t('superAdmin.monthApr'), value: 65 },
+    { label: t('superAdmin.monthMay'), value: 48 },
+    { label: t('superAdmin.monthJun'), value: 72, highlight: true },
+    { label: t('superAdmin.monthJul'), value: 55 },
+    { label: t('superAdmin.monthAug'), value: 60 },
+  ]
+
+  const subscriptionDistribution = [
+    { label: t('superAdmin.freePlan'), value: 45, color: '#16A34A' },
+    { label: t('superAdmin.businessPlan'), value: 32, color: '#84CC16' },
+    { label: t('superAdmin.enterprisePlan'), value: 23, color: '#65A30D' },
+  ]
+
+  const recentShops = [
+    { name: t('superAdmin.recentShopOne'), owner: t('superAdmin.recentShopOwnerOne'), date: '15/06/2026', status: t('superAdmin.activeStatus') },
+    { name: t('superAdmin.recentShopTwo'), owner: t('superAdmin.recentShopOwnerTwo'), date: '12/06/2026', status: t('superAdmin.pendingStatus') },
+    { name: t('superAdmin.recentShopThree'), owner: t('superAdmin.recentShopOwnerThree'), date: '10/06/2026', status: t('superAdmin.activeStatus') },
+    { name: t('superAdmin.recentShopFour'), owner: t('superAdmin.recentShopOwnerFour'), date: '08/06/2026', status: t('superAdmin.expiredStatus') },
+  ]
+
+  const recentActivities = [
+    {
+      icon: AlertTriangle,
+      title: t('superAdmin.expiringSubscriptionAlert'),
+      details: t('superAdmin.expiringSubscriptionAlertDetail'),
+      iconBg: '#FFF0E6',
+      iconColor: '#F97316',
+    },
+    {
+      icon: CheckCircle,
+      title: t('superAdmin.newShopRegistered'),
+      details: t('superAdmin.newShopRegisteredDetail'),
+      iconBg: '#E8F1EA',
+      iconColor: '#456B4C',
+    },
+    {
+      icon: Bell,
+      title: t('superAdmin.storageAlert'),
+      details: t('superAdmin.storageAlertDetail'),
+      iconBg: '#EDF0E0',
+      iconColor: '#4A6700',
+    },
+    {
+      icon: Activity,
+      title: t('superAdmin.suspendedShop'),
+      details: t('superAdmin.suspendedShopDetail'),
+      iconBg: '#FDE8E9',
+      iconColor: '#B72028',
+    },
+  ]
+
   const maxRegistration = Math.max(...registrationData.map((item) => item.value))
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold text-slate-900">ទិដ្ឋភាពទូទៅ</h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600">
-            ទំព័រគ្រប់គ្រងមេដឹកនាំសម្រាប់ DamreiPOS ដែលមានសកម្មភាពរហ័សសម្រាប់បង្កើតហាង និងផែនការជាវ។
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          {actionButtons.map((action) => {
-            const Icon = action.icon
-            return (
-              <button
-                key={action.label}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-sm shadow-[rgba(0,0,0,0.08)] ${
-                  action.variant === 'solid'
-                    ? 'bg-[var(--dp-green-950)] text-white'
-                    : 'border border-slate-200 bg-white text-slate-900'
-                }`}
-              >
-                <Icon size={16} />
-                {action.label}
-              </button>
-            )
-          })}
-        </div>
-      </header>
-
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {kpiCards.map((card) => {
-          const Icon = card.icon
-          const isBright = card.accent.includes('#BAF912')
-          return (
-            <div key={card.title} className={`rounded-[28px] p-5 shadow-[var(--dp-shadow-card)] ${card.accent}`}>
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className={`text-sm font-medium ${isBright ? 'text-slate-900' : 'text-slate-100'}`}>{card.title}</p>
-                  <p className="mt-4 text-3xl font-bold">{card.value}</p>
-                </div>
-                <span className={`grid h-12 w-12 place-items-center rounded-2xl ${isBright ? 'bg-white text-slate-900' : 'bg-white text-[#134F07]'}`}>
-                  <Icon size={22} />
-                </span>
-              </div>
-              <p className={`mt-4 text-sm ${isBright ? 'text-slate-500' : 'text-[#BAF912]/90'}`}>
-                {card.detail}
+    <div className="min-h-full w-full bg-[#F8F9FA] px-0 py-2 sm:px-2 sm:py-3 lg:px-6 lg:py-6">
+      <div className="space-y-4 sm:space-y-6">
+        {/* Header Section */}
+        <section className="rounded-[24px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:p-6">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h1 className="text-xl font-semibold text-slate-900 sm:text-3xl">{t('superAdmin.overview')}</h1>
+              <p className="mt-1 max-w-2xl text-xs text-slate-600 sm:mt-2 sm:text-sm">
+                {t('superAdmin.overviewDescription')}
               </p>
             </div>
-          )
-        })}
-      </section>
 
-      <section className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <div className="rounded-[32px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-900">តារាងចុះឈ្មោះហាង</h2>
-              <p className="mt-1 text-sm text-slate-500">បង្ហាញចំនួនហាងថ្មីដែលបានចុះឈ្មោះក្នុងរយៈពេលថ្មីៗនេះ។</p>
-            </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
-              <ArrowRight size={16} /> ព័ត៌មានលម្អិត
-            </button>
-          </div>
-
-          <div className="mt-6 overflow-hidden rounded-[28px] bg-slate-50 p-6">
-            <div className="flex items-end gap-3 h-64">
-              {registrationData.map((item) => {
-                const height = (item.value / maxRegistration) * 100
+            <div className="flex w-full flex-row gap-2 sm:flex-nowrap sm:items-center sm:gap-3 lg:ml-auto lg:w-auto lg:justify-end">
+              {actionButtons.map((action) => {
+                const Icon = action.icon
                 return (
-                  <div key={item.label} className="flex-1">
-                    <div
-                      className={`mx-auto flex h-full w-full flex-col justify-end rounded-[20px] ${item.highlight ? 'bg-[var(--dp-green-950)]' : 'bg-[var(--dp-lime-200)]'}`}
-                      style={{ height: `${Math.max(height, 16)}%` }}
-                    >
-                      <span className="sr-only">{item.label} {item.value} registrations</span>
-                    </div>
-                    <p className="mt-3 text-center text-xs text-slate-500">{item.label}</p>
-                  </div>
+                  <button
+                    key={action.label}
+                    className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold shadow-sm shadow-[rgba(0,0,0,0.08)] sm:gap-2 sm:px-4 sm:py-2 sm:text-sm lg:min-w-[180px] lg:max-w-[220px] border border-[#627A20] bg-white text-[#627A20]`}
+                  >
+                    <Icon size={14} />
+                    {action.label}
+                  </button>
                 )
               })}
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="rounded-[32px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-          <div className="flex flex-col gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-900">ចែកចាយកម្មវិធីជាវ</h2>
-              <p className="mt-1 text-sm text-slate-500">ភាគរយនៃហាងដែលប្រើផែនការជាវនិច្ចនីមួយៗ។</p>
+        {/* KPI Cards */}
+        <section className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+          {kpiCards.map((card) => {
+            const Icon = card.icon
+            const isBright = card.accent.includes('#BAF912')
+            return (
+              <div key={card.title} className={`rounded-[20px] p-3 shadow-[var(--dp-shadow-card)] sm:rounded-[28px] sm:p-5 ${card.accent}`}>
+                <div className="flex items-center justify-between gap-2 sm:gap-3">
+                  <div>
+                    <p className={`text-xs font-medium sm:text-sm ${isBright ? 'text-slate-900' : 'text-slate-100'}`}>{card.title}</p>
+                    <p className="mt-2 text-xl font-bold sm:mt-4 sm:text-3xl">{card.value}</p>
+                  </div>
+                  <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl sm:h-12 sm:w-12 sm:rounded-2xl ${isBright ? 'bg-white text-slate-900' : 'bg-white text-[#134F07]'}`}>
+                    <Icon size={18} />
+                  </span>
+                </div>
+                <p className={`mt-2 text-xs sm:mt-4 sm:text-sm ${isBright ? 'text-slate-500' : 'text-[#BAF912]/90'}`}>
+                  {card.detail}
+                </p>
+              </div>
+            )
+          })}
+        </section>
+
+        {/* Charts Section */}
+        <section className="grid gap-3 xl:grid-cols-[1.6fr_1fr] items-stretch sm:gap-4">
+          {/* Registration Chart */}
+          <div className="h-full rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.registrationStats')}</h2>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.registrationStatsDescription')}</p>
+              </div>
+              <button className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+                {t('superAdmin.juneMonth')}
+              </button>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="h-40 w-40">
+
+            <div className="mt-4 overflow-hidden rounded-[20px] bg-gradient-to-b from-[#F0FDF4] to-[#F8F9FA] p-2 sm:mt-6 sm:rounded-[28px] sm:p-6">
+              <div className="flex items-end gap-2 sm:gap-3" style={{ height: '10rem' }}>
+                {registrationData.map((item) => {
+                  const height = (item.value / maxRegistration) * 100
+                  return (
+                    <div key={item.label} className="group relative flex flex-1 flex-col h-full items-center justify-end">
+                      {/* Tooltip on hover */}
+                      <div className="absolute -top-8 left-1/2 z-10 -translate-x-1/2 scale-0 rounded-lg bg-[#134F07] px-3 py-1.5 text-xs font-bold text-white shadow-lg transition-all duration-200 group-hover:scale-100">
+                        {item.value} {t('superAdmin.shopLabel')}
+                        <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-[#134F07]" />
+                      </div>
+                      <p className="mb-2 text-sm font-bold text-slate-700 transition-all duration-200 group-hover:text-[#134F07]">{item.value}</p>
+                      <div
+                        className={`relative w-full cursor-pointer transition-all duration-300 ease-out group-hover:brightness-110 group-hover:shadow-lg ${
+                          item.highlight
+                            ? 'bg-gradient-to-t from-[#16A34A] to-[#9AF672] shadow-[0_4px_12px_rgba(22,163,74,0.3)]'
+                            : 'bg-gradient-to-t from-[#86EFAC] to-[#DCFCE7] hover:from-[#16A34A] hover:to-[#9AF672]'
+                        }`}
+                        style={{
+                          height: `${Math.max(height, 16)}%`,
+                          borderTopLeftRadius: '20px',
+                          borderTopRightRadius: '20px',
+                          minWidth: '24px',
+                        }}
+                      />
+                      <p className="mt-3 text-center text-xs font-medium text-slate-500 transition-all duration-200 group-hover:text-[#134F07]">{item.label}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Subscription Distribution */}
+          <div className="h-full rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.subscriptionPlans')}</h2>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.subscriptionPlansDescription')}</p>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-col gap-4 sm:mt-6 sm:flex-row sm:items-center">
+              <div className="mx-auto h-32 w-32 sm:h-40 sm:w-40">
                 <DonutChart data={subscriptionDistribution} />
               </div>
-              <div className="flex-1 space-y-3">
+              <div className="flex-1 space-y-2 sm:space-y-3">
                 {subscriptionDistribution.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between gap-3 text-sm">
+                  <div key={item.label} className="group flex items-center justify-between gap-3 rounded-xl p-2 text-sm transition-all duration-200 hover:bg-[#F0FDF4]">
                     <div className="flex items-center gap-3">
-                      <span className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: item.color }} />
-                      <span className="text-slate-700">{item.label}</span>
+                      <span className="relative h-3 w-3 rounded-full transition-all duration-200 group-hover:scale-125 group-hover:shadow-md sm:h-3.5 sm:w-3.5" style={{ backgroundColor: item.color }} />
+                      <span className="text-xs text-slate-700 font-medium sm:text-sm">{item.label}</span>
                     </div>
-                    <span className="font-semibold text-slate-900">{item.value}%</span>
+                    <span className="text-xs font-bold text-slate-900 sm:text-sm">{item.value}%</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-        <div className="rounded-[32px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold text-slate-900">ហាងដែលចុះឈ្មោះថ្មីៗ</h3>
-              <p className="mt-1 text-sm text-slate-500">ហាងដែលទើបឈានចូល និងស្ថានភាពបច្ចុប្បន្នរបស់ពួកគេ។</p>
+        {/* Recent Shops & Activities */}
+        <section className="grid gap-3 xl:grid-cols-[1.4fr_1fr] sm:gap-4">
+          {/* Recent Shops */}
+          <div className="rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.newlyRegisteredShops')}</h3>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.newlyRegisteredShopsDescription')}</p>
+              </div>
+              <button className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">{t('superAdmin.viewAll')}</button>
             </div>
-            <button className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">មើលទាំងអស់</button>
-          </div>
-          <div className="mt-6 space-y-4">
-            {recentShops.map((shop) => (
-              <div key={shop.name} className="flex items-center justify-between gap-4 rounded-[24px] border border-slate-100 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[var(--dp-green-950)] text-white">
-                    <Store size={20} />
+            <div className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
+              {recentShops.map((shop) => (
+                <div key={shop.name} className="flex items-center justify-between gap-2 rounded-[20px] border border-slate-100 bg-white p-3 sm:rounded-[24px] sm:p-4 sm:gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white sm:h-12 sm:w-12 sm:rounded-2xl overflow-hidden border border-slate-100">
+                      <img src={shopImages[shop.name] || ''} alt={shop.name} className="h-full w-full object-cover" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 sm:text-base truncate">{shop.name}</p>
+                      <p className="text-xs text-slate-500 sm:text-sm truncate">{shop.owner} · {shop.date}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-slate-900">{shop.name}</p>
-                    <p className="text-sm text-slate-500">{shop.owner}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-slate-500">{shop.date}</p>
-                  <span className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${shop.status === 'សកម្ម' ? 'bg-emerald-100 text-emerald-700' : shop.status === 'កំពុងរង់ចាំ' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+                  <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold sm:px-3 sm:py-1 ${shop.status === t('superAdmin.activeStatus') ? 'bg-emerald-100 text-emerald-700' : shop.status === t('superAdmin.pendingStatus') ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
                     {shop.status}
                   </span>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-[32px] bg-white p-6 shadow-[var(--dp-shadow-card)]">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold text-slate-900">សកម្មភាពថ្មីៗ</h3>
-              <p className="mt-1 text-sm text-slate-500">ព្រឹត្តិការណ៍លើផ្លាតហ្វូមដែលត្រូវការយកចិត្តទុកដាក់ពីអ្នកគ្រប់គ្រង។</p>
+              ))}
             </div>
-            <button className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">មើលទាំងអស់</button>
           </div>
-          <div className="mt-6 space-y-4">
-            {recentActivities.map((activity) => {
-              const Icon = activity.icon
-              return (
-                <div key={activity.title} className="group flex items-center justify-between gap-4 rounded-[24px] border border-slate-100 bg-slate-50 p-4 transition hover:border-[var(--dp-green-950)] hover:bg-[var(--dp-lime-100)]">
-                  <div className="flex items-center gap-3">
-                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[var(--dp-green-950)] text-white">
-                      <Icon size={18} />
-                    </span>
-                    <div>
-                      <p className="font-semibold text-slate-900">{activity.title}</p>
-                      <p className="mt-1 text-sm text-slate-500">{activity.details}</p>
+
+          {/* Recent Activities */}
+          <div className="rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.recentActivities')}</h3>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.recentActivitiesDescription')}</p>
+              </div>
+              <button className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">{t('superAdmin.viewAll')}</button>
+            </div>
+            <div className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
+              {recentActivities.map((activity) => {
+                const Icon = activity.icon
+                return (
+                  <div key={activity.title} className="group flex flex-col gap-2 rounded-[20px] border border-slate-100 bg-white p-3 transition hover:border-[var(--dp-green-950)] hover:bg-[var(--dp-lime-100)] sm:flex-row sm:items-center sm:justify-between sm:rounded-[24px] sm:p-4 sm:gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl sm:h-12 sm:w-12 sm:rounded-2xl" style={{ backgroundColor: activity.iconBg, color: activity.iconColor }}>
+                        <Icon size={16} />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-900 sm:text-base">{activity.title}</p>
+                        <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">{activity.details}</p>
+                      </div>
                     </div>
+                    <ArrowRight className="hidden h-5 w-5 shrink-0 text-slate-400 transition group-hover:text-[var(--dp-green-950)] sm:block" />
                   </div>
-                  <ArrowRight className="h-5 w-5 text-slate-400 transition group-hover:text-[var(--dp-green-950)]" />
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }
