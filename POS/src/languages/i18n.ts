@@ -7,6 +7,8 @@ import enSidebar from "./english/sidebar.json";
 import kmSidebar from "./khmer/sidebar.json";
 import enHomepage from "./english/homepage.json";
 import kmHomepage from "./khmer/homepage.json";
+import enProduct from "./english/product.json";
+import kmProduct from "./khmer/product.json";
 
 i18n
   .use(LanguageDetector)
@@ -17,11 +19,13 @@ i18n
         auth: enAuth,
         sidebar: enSidebar,
         homepage: enHomepage,
+        product: enProduct,
       },
       km: {
         auth: kmAuth,
         sidebar: kmSidebar,
         homepage: kmHomepage,
+        product: kmProduct,
       },
     },
     fallbackLng: "km",
