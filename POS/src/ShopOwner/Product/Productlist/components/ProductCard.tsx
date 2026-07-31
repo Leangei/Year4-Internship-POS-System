@@ -1,17 +1,30 @@
 import { useTranslation } from 'react-i18next'
-import { Pencil, Trash2, Tag, ChevronRight, Shirt, Sparkles, Footprints, Ribbon } from 'lucide-react'
+import { Pencil, Trash2, Tag, ChevronRight, Shirt, Sparkles, Footprints, Flower } from 'lucide-react'
 import type { LucideProps } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { ProductItem } from './ProductTypes'
+import { useNavigate } from 'react-router-dom'
 
 const MAX_VISIBLE_VARIANTS = 4
 const LOW_STOCK_THRESHOLD = 2
 
 export default function ProductCard({ product }: { product: ProductItem }) {
   const { t } = useTranslation('product')
+  const navigate = useNavigate()
 
   const visibleVariants = product.variants.slice(0, MAX_VISIBLE_VARIANTS)
   const remainingCount = product.variants.length - MAX_VISIBLE_VARIANTS
+
+  const imageSrc = (() => {
+    if (!product.image) return ''
+    // If it's an absolute URL or already a root-relative path, use as-is
+    if (/^https?:\/\//.test(product.image) || product.image.startsWith('/')) return product.image
+    try {
+      return new URL(`../../../../assets/productList/${encodeURIComponent(product.image)}`, import.meta.url).href
+    } catch {
+      return product.image
+    }
+  })()
 
   const LOW_STOCK_COLOR = 'bg-[var(--dp-danger-tint)] text-[var(--dp-danger)] border-[color-mix(in_srgb,var(--dp-danger)_18%,#fff)]'
   const NORMAL_VARIANT_COLOR = 'bg-[var(--dp-surface-2)] text-[var(--dp-muted)] border-[var(--dp-line)]'
@@ -25,7 +38,7 @@ export default function ProductCard({ product }: { product: ProductItem }) {
       case 'Footwear':
         return Footprints
       case 'Accessories':
-        return Ribbon
+        return Flower
       default:
         return Tag
     }
@@ -34,17 +47,20 @@ export default function ProductCard({ product }: { product: ProductItem }) {
   return (
     <>
       {/* ── Mobile Card ── */}
-      <div
-        className="lg:hidden bg-white border border-[var(--dp-line)] rounded-[var(--dp-r-card)] p-2.5 shadow-[0_0_4px_rgba(0,0,0,0.25)] cursor-pointer"
-        role="button"
-        tabIndex={0}
-        aria-label={product.name}
-      >
+<div
+  onClick={() =>
+    navigate(`/shopOwner/products/${product.id}`)
+  }
+  className="lg:hidden ..."
+  role="button"
+  tabIndex={0}
+  aria-label={product.name}
+>
         <div className="flex gap-2.5">
           {/* Image */}
           <div
             className="w-[72px] h-[72px] rounded-[12px] flex-shrink-0 bg-cover bg-center border border-[var(--dp-line)]"
-            style={{ backgroundImage: `url(${product.image})` }}
+            style={{ backgroundImage: `url(${imageSrc})` }}
           />
           {/* Info */}
           <div className="flex-1 min-w-0 flex flex-col">
@@ -101,12 +117,9 @@ export default function ProductCard({ product }: { product: ProductItem }) {
       </div>
 
       {/* ── Desktop Card (unchanged) ── */}
-      <div
-        className="hidden lg:block bg-white rounded-[var(--dp-r-card)] shadow-[var(--dp-shadow-card)] overflow-hidden mb-4 w-full cursor-pointer transition-shadow duration-150 hover:shadow-[var(--dp-shadow-pop)]"
-        role="button"
-        tabIndex={0}
-        aria-label={product.name}
-      >
+ <div
+  className="hidden lg:block bg-white rounded-[var(--dp-r-card)] shadow-[var(--dp-shadow-card)] overflow-hidden mb-4 w-full transition-shadow duration-150 hover:shadow-[var(--dp-shadow-pop)]"
+>
         <div className="flex flex-col lg:flex-row lg:items-stretch">
           {/* Product Image */}
           <div
@@ -114,7 +127,7 @@ export default function ProductCard({ product }: { product: ProductItem }) {
             style={{ aspectRatio: '1 / 1', maxHeight: 'clamp(112px, 26vw, 240px)', width: 'clamp(112px, 26%, 240px)' }}
           >
             <img
-              src={product.image}
+              src={imageSrc}
               alt={`${product.name} — ${t('productImage')}`}
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover block"
@@ -177,9 +190,36 @@ export default function ProductCard({ product }: { product: ProductItem }) {
 
             {/* Action Buttons */}
             <div className="flex flex-col gap-2 mt-auto pt-3 lg:flex-row lg:justify-end lg:items-center">
-              <button type="button" className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-transparent text-[var(--dp-body)] text-sm leading-[var(--dp-lh-sm)] font-semibold cursor-pointer font-[inherit] border-none transition-[background] duration-150 hover:bg-[var(--dp-chip)] flex-1 lg:flex-none">
-                <span className="inline-flex items-center">{t('productDetails')}</span>
-              </button>
+              <button
+  type="button"
+  onClick={() =>
+    navigate(`/shopOwner/products/${product.id}`)
+  }
+  className="
+    inline-flex
+    items-center
+    justify-center
+    gap-2
+    px-4
+    py-2
+    rounded-full
+    bg-transparent
+    text-[var(--dp-body)]
+    text-sm
+    font-semibold
+    cursor-pointer
+    border-none
+    transition-[background]
+    duration-150
+    hover:bg-[var(--dp-chip)]
+    flex-1
+    lg:flex-none
+  "
+>
+  <span className="inline-flex items-center">
+    {t('productDetails')}
+  </span>
+</button>
               <button type="button" className="inline-flex items-center justify-center p-2 rounded-full bg-transparent border border-[var(--dp-line)] text-[var(--dp-body)] cursor-pointer font-[inherit] transition-[background,border-color] duration-150 hover:bg-[var(--dp-surface-2)] hover:border-[var(--dp-line-strong)]" aria-label={t('editProduct')}>
                 <span className="inline-flex items-center justify-center flex-shrink-0 leading-none">
                   <Pencil size={18} strokeWidth={1.9} />

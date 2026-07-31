@@ -12,7 +12,8 @@ import SuperAdminLayout from '../components/layout/SuperAdminLayout.tsx'
 import DashboardHome from '../ShopOwner/Hompage/DashboardHome.tsx'
 import CustomerPage from '../ShopOwner/Customer/CustomerPage.tsx'
 import OrderPage from '../ShopOwner/Order/OrderPage.tsx'
-import ProductPage from '../ShopOwner/Product/ProductPage.tsx'
+import ProductPage from '../ShopOwner/Product/Productlist/ProductPage.tsx'
+import ProductDetail from '../ShopOwner/Product/ProductDetails/ProductDetail.tsx'
 import InboxPage from '../ShopOwner/Inbox/InboxPage.tsx'
 import SettingsPage from '../ShopOwner/Setting/SettingsPage.tsx'
 import PlanPage from '../ShopOwner/Plan/PlanPage.tsx'
@@ -40,6 +41,7 @@ function AppRoutes() {
           <Route index element={<DashboardHome />} />
           <Route path="orders" element={<OrderPage />} />
           <Route path="products" element={<ProductPage />} />
+          <Route path="products/:id" element={<ProductDetail />} />
           <Route path="customers" element={<CustomerPage />} />
           <Route path="inbox" element={<InboxPage />} />
           <Route path="settings" element={<SettingsPage />} />
