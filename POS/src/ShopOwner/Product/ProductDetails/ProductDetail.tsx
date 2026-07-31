@@ -1,15 +1,17 @@
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import ProductDetailHeader from './components/ProductDetailHeader'
 import ProductGallery from './components/ProductGallery'
 import ProductInfoCard from './components/ProductInfo'
 import ProductDescription from './components/ProductDescription'
 import ProductStats from './components/ProductStats'
-import ProductVariantTable from './components/ProductVariantTable'
+import ProductVariantBuilder from './components/ProductVariantBuilder'
 import FacebookCaption from './components/FacebookCaption'
 
 
 export default function ProductDetail() {
   const { t } = useTranslation('productDetail')
+  const navigate = useNavigate()
   return (
     <div className="p-3 sm:p-4 lg:p-8 max-w-7xl mx-auto flex flex-col gap-4 sm:gap-6">
 
@@ -44,8 +46,8 @@ export default function ProductDetail() {
           {/* 5. Description */}
           <ProductDescription />
 
-          {/* 6. Variant Stock Table */}
-          <ProductVariantTable />
+          {/* 6. Variant Builder */}
+          <ProductVariantBuilder />
         </div>
 
       </div>
@@ -58,6 +60,7 @@ export default function ProductDetail() {
       {/* 8. Bottom Action Button */}
       <button
         type="button"
+        onClick={() => navigate('/shopOwner/products/1/edit')}
         className="
           w-full
           rounded-xl

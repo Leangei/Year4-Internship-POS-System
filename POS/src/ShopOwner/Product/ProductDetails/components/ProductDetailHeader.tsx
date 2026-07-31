@@ -91,6 +91,7 @@ export default function ProductDetailHeader({
       {/* Right */}
       <button
         type="button"
+        onClick={() => navigate(`/shopOwner/products/${productId}/edit`)}
         className="
           inline-flex
           items-center

@@ -14,6 +14,9 @@ import CustomerPage from '../ShopOwner/Customer/CustomerPage.tsx'
 import OrderPage from '../ShopOwner/Order/OrderPage.tsx'
 import ProductPage from '../ShopOwner/Product/Productlist/ProductPage.tsx'
 import ProductDetail from '../ShopOwner/Product/ProductDetails/ProductDetail.tsx'
+import EditProduct from '../ShopOwner/Product/EditProduct/EditProduct.tsx'
+import CreateProduct from '../ShopOwner/Product/CreateProduct/CreateProduct'
+import VariantBuilderPage from '../ShopOwner/Product/VariantBuilder/VariantBuilderPage.tsx'
 import InboxPage from '../ShopOwner/Inbox/InboxPage.tsx'
 import SettingsPage from '../ShopOwner/Setting/SettingsPage.tsx'
 import PlanPage from '../ShopOwner/Plan/PlanPage.tsx'
@@ -41,7 +44,10 @@ function AppRoutes() {
           <Route index element={<DashboardHome />} />
           <Route path="orders" element={<OrderPage />} />
           <Route path="products" element={<ProductPage />} />
+          <Route path="products/new" element={<CreateProduct />} />
+          <Route path="products/variants" element={<VariantBuilderPage />} />
           <Route path="products/:id" element={<ProductDetail />} />
+          <Route path="products/:id/edit" element={<EditProduct />} />
           <Route path="customers" element={<CustomerPage />} />
           <Route path="inbox" element={<InboxPage />} />
           <Route path="settings" element={<SettingsPage />} />

@@ -220,7 +220,7 @@ export default function ProductCard({ product }: { product: ProductItem }) {
     {t('productDetails')}
   </span>
 </button>
-              <button type="button" className="inline-flex items-center justify-center p-2 rounded-full bg-transparent border border-[var(--dp-line)] text-[var(--dp-body)] cursor-pointer font-[inherit] transition-[background,border-color] duration-150 hover:bg-[var(--dp-surface-2)] hover:border-[var(--dp-line-strong)]" aria-label={t('editProduct')}>
+              <button type="button" onClick={() => navigate(`/shopOwner/products/${product.id}/edit`)} className="inline-flex items-center justify-center p-2 rounded-full bg-transparent border border-[var(--dp-line)] text-[var(--dp-body)] cursor-pointer font-[inherit] transition-[background,border-color] duration-150 hover:bg-[var(--dp-surface-2)] hover:border-[var(--dp-line-strong)]" aria-label={t('editProduct')}>
                 <span className="inline-flex items-center justify-center flex-shrink-0 leading-none">
                   <Pencil size={18} strokeWidth={1.9} />
                 </span>
