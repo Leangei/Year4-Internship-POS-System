@@ -1,7 +1,12 @@
 import ProductCard from './ProductCard'
 import type { ProductItem } from './ProductTypes'
 
-export default function ProductList({ products }: { products: ProductItem[] }) {
+interface ProductListProps {
+  products: ProductItem[]
+  onDelete?: (id: string) => void
+}
+
+export default function ProductList({ products, onDelete }: ProductListProps) {
   return (
     <div className="flex flex-col gap-[10px] mt-0 lg:mt-5">
       {products.length === 0 ? (
@@ -9,7 +14,7 @@ export default function ProductList({ products }: { products: ProductItem[] }) {
           No products found.
         </div>
       ) : (
-        products.map((product) => <ProductCard key={product.id} product={product} />)
+        products.map((product) => <ProductCard key={product.id} product={product} onDelete={onDelete} />)
       )}
     </div>
   )

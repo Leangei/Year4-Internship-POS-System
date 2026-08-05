@@ -8,6 +8,7 @@ interface CreateGeneralInfoProps {
   price: string
   stock: string
   description: string
+  images?: string[]
   onNameChange: (value: string) => void
   onCategoryChange: (value: string) => void
   onPriceChange: (value: string) => void
@@ -21,6 +22,7 @@ export default function CreateGeneralInfo({
   price,
   stock,
   description,
+  images,
   onNameChange,
   onCategoryChange,
   onPriceChange,
@@ -131,7 +133,16 @@ export default function CreateGeneralInfo({
         </span>
       </div>
 
-      <CreateVariantSection />
+      <CreateVariantSection
+        draft={{
+          name,
+          category,
+          price,
+          stock,
+          description,
+          images,
+        }}
+      />
     </div>
   )
 }

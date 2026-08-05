@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { ImagePlus, Copy } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,17 +6,28 @@ interface CreateImageSectionProps {
   name: string
   categoryLabel: string
   price: string
+  images: string[]
+  onImagesChange: (images: string[]) => void
 }
 
-export default function CreateImageSection({ name, categoryLabel, price }: CreateImageSectionProps) {
+export default function CreateImageSection({ name, categoryLabel, price, images, onImagesChange }: CreateImageSectionProps) {
   const { t } = useTranslation('productDetail')
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [images, setImages] = useState<string[]>([])
 
-  const handleFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? [])
-    const nextImages = files.map((file) => URL.createObjectURL(file))
-    setImages((prev) => [...prev, ...nextImages])
+    const nextImages = await Promise.all(
+      files.map(
+        (file) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader()
+            reader.onload = () => resolve(reader.result as string)
+            reader.readAsDataURL(file)
+          }),
+      ),
+    )
+
+    onImagesChange([...images, ...nextImages])
     e.target.value = ''
   }
 
@@ -29,44 +40,44 @@ export default function CreateImageSection({ name, categoryLabel, price }: Creat
             <circle cx="8.5" cy="9.5" r="1.6" />
             <path d="m4 17 4.5-4.5 3.5 3.5 3-3L20.5 16" />
           </svg>
-          {t('images') || 'រូបភាព'}
+          {t('images') || 'Images'}
         </h2>
 
         <button type="button" onClick={() => fileInputRef.current?.click()} className="flex w-full flex-col items-center justify-center gap-2 rounded-[18px] border border-dashed border-[#C0C9BF] bg-gradient-to-b from-[#fbfcfb] to-[#f4f6f3] p-5 text-center text-[var(--dp-body)]">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(0,53,27,0.08)] text-[var(--dp-green-900)]">
             <ImagePlus size={24} strokeWidth={1.9} />
           </span>
-          <span className="text-[15px] font-semibold text-[var(--dp-ink)]">{t('uploadImage') || 'ចុចដើម្បីបន្ថែមរូបភាព'}</span>
-          <span className="text-xs text-[var(--dp-muted)]">{t('uploadHint') || 'អាចបន្ថែមរូបភាពបាន ៥ សន្លឹក (JPG, PNG)'}</span>
+          <span className="text-[15px] font-semibold text-[var(--dp-ink)]">{t('uploadImage') || 'Upload images'}</span>
+          <span className="text-xs text-[var(--dp-muted)]">{t('uploadHint') || 'Add up to 5 images (JPG, PNG)'}</span>
         </button>
 
         <div className="mt-4 flex flex-wrap gap-2.5">
           {images.map((image, index) => (
             <div key={`${image}-${index}`} className="h-16 w-16 overflow-hidden rounded-lg border border-[#E7E8E9] bg-[var(--dp-surface-2)]">
-              <img src={image} alt="" className="h-full w-full object-cover" />
+              <img src={image} alt="Product upload preview" className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
 
-        <input ref={fileInputRef} className="hidden" type="file" accept="image/png,image/jpeg,image/webp" multiple tabIndex={-1} onChange={handleFilesSelected} />
+        <input ref={fileInputRef} className="hidden" type="file" accept="image/png,image/jpeg,image/webp" multiple onChange={handleFilesSelected} />
       </div>
 
       <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-5">
-        <h2 className="text-sm font-semibold text-[var(--dp-ink)]">{t('forFacebookPost') || 'សម្រាប់ផុសក្នុង Facebook'}</h2>
+        <h2 className="text-sm font-semibold text-[var(--dp-ink)]">{t('forFacebookPost') || 'For Facebook post'}</h2>
         <div className="mt-4 rounded-[14px] bg-[var(--dp-surface-2)] p-4 text-sm text-[var(--dp-body)]">
           <div className="space-y-2">
             <span className="block">🎀 {name || t('enterProductName') || 'Enter product name'}</span>
             <span className="block">💵 {t('captionPrice') || 'Price'}: {price ? `$${price}` : '—'}</span>
             <span className="block">🏷 {t('category') || 'Category'}: {categoryLabel}</span>
-            <span className="block">✅ {t('captionQuality') || 'Full Quality'}</span>
-            <span className="block">📩 {t('captionOrderVia') || 'Order via'}: សារ!!!</span>
+            <span className="block">✅ {t('captionQuality') || 'Full quality'}</span>
+            <span className="block">📩 {t('captionOrderVia') || 'Order via'}: message</span>
           </div>
         </div>
-        <button type="button" className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--dp-green-900)] px-4 py-2.5 text-sm font-semibold text-white" onClick={() => navigator.clipboard.writeText('🎀 ...')}>
+        <button type="button" className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--dp-green-900)] px-4 py-2.5 text-sm font-semibold text-white" onClick={() => navigator.clipboard.writeText('🎀 ...') }>
           <Copy size={16} />
-          {t('copyData') || 'ចម្លង'}
+          {t('copyData') || 'Copy data'}
         </button>
-        <p className="mt-3 text-xs text-[var(--dp-muted)]">{t('autoGeneratedText') || 'អត្ថបទនេះត្រូវបានបង្កើតដោយស្វ័យប្រវត្តិ សម្រាប់ការផុសក្នុង Facebook របស់អ្នក'}</p>
+        <p className="mt-3 text-xs text-[var(--dp-muted)]">{t('autoGeneratedText') || 'Generated automatically for your Facebook post.'}</p>
       </div>
     </div>
   )

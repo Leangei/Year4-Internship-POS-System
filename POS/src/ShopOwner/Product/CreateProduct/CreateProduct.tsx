@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import CreateProductHeader from './components/CreateProductHeader'
 import CreateImageSection from './components/CreateImageSection'
 import CreateGeneralInfo from './components/CreateGeneralInfo'
+import { createAndSaveProduct } from '../ProductData'
 
 export default function CreateProduct() {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ export default function CreateProduct() {
   const [price, setPrice] = useState('')
   const [stock, setStock] = useState('')
   const [description, setDescription] = useState('')
+  const [images, setImages] = useState<string[]>([])
 
   const categoryLabel = useMemo(() => {
     switch (category) {
@@ -36,13 +38,22 @@ export default function CreateProduct() {
   }
 
   const handleSave = () => {
-    console.log('Create product', {
-      name,
-      category,
-      price,
-      stock,
-      description,
-    })
+    try {
+      const newProduct = createAndSaveProduct({
+        name: name || 'Unnamed product',
+        category,
+        price: price || '0',
+        stock: Number(stock) || 0,
+        description,
+        images,
+        variants: [],
+      })
+
+      console.log('Product saved:', newProduct)
+      navigate('/shopOwner/products')
+    } catch (error) {
+      console.error('Failed to save product:', error)
+    }
   }
 
   return (
@@ -55,7 +66,13 @@ export default function CreateProduct() {
 
       <div className="flex flex-col gap-4 sm:gap-6 lg:grid lg:grid-cols-12">
         <div className="flex flex-col gap-4 sm:gap-6 lg:col-span-4">
-          <CreateImageSection name={name} categoryLabel={categoryLabel} price={price} />
+          <CreateImageSection
+            name={name}
+            categoryLabel={categoryLabel}
+            price={price}
+            images={images}
+            onImagesChange={setImages}
+          />
         </div>
 
         <div className="flex flex-col gap-4 sm:gap-6 lg:col-span-8">
@@ -65,6 +82,7 @@ export default function CreateProduct() {
             price={price}
             stock={stock}
             description={description}
+            images={images}
             onNameChange={setName}
             onCategoryChange={setCategory}
             onPriceChange={setPrice}

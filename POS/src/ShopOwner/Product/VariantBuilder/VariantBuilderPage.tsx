@@ -1,15 +1,64 @@
+import { useCallback, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Save } from 'lucide-react'
-import ProductVariantBuilder from '../ProductDetails/components/ProductVariantBuilder'
+import ProductVariantBuilder, { type ProductVariantBuilderHandle } from '../ProductDetails/components/ProductVariantBuilder'
+import { buildProductItem, loadProducts, saveProducts } from '../ProductData'
+import type { ProductDraft, ProductVariant } from '../Productlist/components/ProductTypes'
+
+const DEFAULT_DRAFT: ProductDraft = {
+  name: '',
+  category: 'clothes',
+  price: '',
+  stock: '',
+  description: '',
+  images: [],
+}
+
+const loadDraft = (): ProductDraft => {
+  if (typeof window === 'undefined') return DEFAULT_DRAFT
+  try {
+    const raw = sessionStorage.getItem('posProductDraft')
+    if (!raw) return DEFAULT_DRAFT
+    return { ...DEFAULT_DRAFT, ...JSON.parse(raw) }
+  } catch {
+    return DEFAULT_DRAFT
+  }
+}
 
 export default function VariantBuilderPage() {
   const { t } = useTranslation('productDetail')
   const navigate = useNavigate()
+  const [draft] = useState<ProductDraft>(loadDraft)
+  const [previewVariants, setPreviewVariants] = useState<ProductVariant[]>([])
+  const builderRef = useRef<ProductVariantBuilderHandle>(null)
+
+  const handleVariantsChange = useCallback((nextVariants: ProductVariant[]) => {
+    setPreviewVariants(nextVariants)
+  }, [])
 
   const handleSave = () => {
-    // TODO: Implement save logic
-    console.log('Save variants')
+    try {
+      // Read the latest variants synchronously from the builder
+      const finalVariants = builderRef.current?.getVariants() ?? previewVariants
+
+      const newProduct = buildProductItem({
+        name: draft.name || 'Unnamed product',
+        category: draft.category || 'clothes',
+        price: draft.price || '0',
+        stock: Number(draft.stock) || 0,
+        description: draft.description,
+        images: draft.images,
+        variants: finalVariants,
+      })
+
+      const existingProducts = loadProducts()
+      saveProducts([newProduct, ...existingProducts])
+      sessionStorage.removeItem('posProductDraft')
+      navigate('/shopOwner/products')
+    } catch (error) {
+      console.error('Failed to save product:', error)
+    }
   }
 
   const handleCancel = () => {
@@ -41,7 +90,7 @@ export default function VariantBuilderPage() {
             <span>{t('createProduct') || 'បង្កើតផលិតផលថ្មី'}</span>
           </h1>
           <p className="dp-pagehead__sub">
-            {t('variantHintMessage') || 'បំពេញព័ត៌មាន ដើម្បីបន្ថែមផលិតផលថ្មីទៅក្នុងបញ្ជីរបស់អ្នក។'}
+            {draft.name ? draft.name : (t('variantHintMessage') || 'បំពេញព័ត៌មាន ដើម្បីបន្ថែមផលិតផលថ្មីទៅក្នុងបញ្ជីរបស់អ្នក។')}
           </p>
         </div>
         <div className="dp-pagehead__right">
@@ -65,7 +114,7 @@ export default function VariantBuilderPage() {
         </div>
       </header>
 
-      <ProductVariantBuilder />
+      <ProductVariantBuilder ref={builderRef} onVariantsChange={handleVariantsChange} />
     </div>
   )
 }

@@ -304,6 +304,131 @@
   color: var(--dp-ink);
 }
 
+.dp-table {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dp-table__scroll {
+  overflow-x: auto;
+  border-radius: 18px;
+  background: var(--dp-white);
+  border: 1px solid var(--dp-line);
+}
+
+.dp-table__el {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+.dp-table__th,
+.dp-table__td {
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--dp-line);
+  vertical-align: middle;
+}
+
+.dp-table__th {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dp-body);
+  background: var(--dp-surface-2);
+  text-align: left;
+}
+
+.dp-table__th.is-right,
+.dp-table__td.is-right {
+  text-align: right;
+}
+
+.dp-table__tr:last-child .dp-table__td {
+  border-bottom: none;
+}
+
+.dp-table__td {
+  font-size: 14px;
+  color: var(--dp-body);
+}
+
+.cat-vcol {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--dp-surface-2);
+  color: var(--dp-body);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cat-vcol__x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dp-muted);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cat-vcol__x:hover {
+  background: var(--dp-surface-2);
+  color: var(--dp-danger);
+}
+
+.cat-vin {
+  width: 100%;
+  min-width: 140px;
+  padding: 12px 14px;
+  border: 1px solid var(--dp-line);
+  border-radius: var(--dp-r-field);
+  background: var(--dp-white);
+  color: var(--dp-ink);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.cat-vin:focus {
+  border-color: var(--dp-green-500);
+  box-shadow: 0 0 0 3px rgba(49, 157, 5, 0.12);
+}
+
+.cat-vin--num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.cat-addcol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.cat-addcol__label {
+  font-size: 13px;
+  color: var(--dp-muted);
+}
+
+.cat-tablefoot {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid var(--dp-line);
+}
+
+.dp-btn--full {
+  width: 100%;
+}
+
 .cat-drop {
   display: flex;
   flex-direction: column;

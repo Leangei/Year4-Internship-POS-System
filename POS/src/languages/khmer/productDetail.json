@@ -51,5 +51,11 @@
   "colName": "ឈ្មោះប្រភេទ",
   "variant": "ប្រភេទ",
   "delete": "លុប",
-  "category": "ប្រភេទ"
+  "category": "ប្រភេទ",
+  "customVariantType": "ប្រភេទបំរែបំរួលថ្មី",
+  "customVariantName": "ឈ្មោះប្រភេទ",
+  "customVariantNamePlaceholder": "ឧ. រសជាតិ, សម្ភារៈ...",
+  "customVariantValue": "តម្លៃប្រភេទ",
+  "customVariantValuePlaceholder": "បញ្ចូលតម្លៃ...",
+  "generateCombinations": "បង្កើតបំរែបំរួល"
 }

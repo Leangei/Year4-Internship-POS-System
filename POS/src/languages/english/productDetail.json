@@ -51,5 +51,11 @@
   "colName": "Column name",
   "variant": "Variant",
   "delete": "Delete",
-  "category": "Category"
+  "category": "Category",
+  "customVariantType": "New Variant Type",
+  "customVariantName": "Variant Name",
+  "customVariantNamePlaceholder": "e.g. Flavor, Material...",
+  "customVariantValue": "Variant Value",
+  "customVariantValuePlaceholder": "Enter value...",
+  "generateCombinations": "Generate Combinations"
 }

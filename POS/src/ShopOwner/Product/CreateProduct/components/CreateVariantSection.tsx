@@ -1,16 +1,26 @@
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import type { ProductDraft } from '../../Productlist/components/ProductTypes'
 
-export default function CreateVariantSection() {
+interface CreateVariantSectionProps {
+  draft: ProductDraft
+}
+
+export default function CreateVariantSection({ draft }: CreateVariantSectionProps) {
   const { t } = useTranslation('productDetail')
   const navigate = useNavigate()
+
+  const handleClick = () => {
+    sessionStorage.setItem('posProductDraft', JSON.stringify(draft))
+    navigate('/shopOwner/products/variants')
+  }
 
   return (
     <button
       type="button"
       className="cat-hint cat-hint--btn mt-4 w-full"
-      onClick={() => navigate('/shopOwner/products/variants')}
+      onClick={handleClick}
     >
       <div className="cat-hint__title">
         {t('variantHintTitle') || 'Add size, color, and stock later'}

@@ -1,70 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ProductFilters from './components/ProductFilters'
 import ProductHeader from './components/ProductHeader'
 import ProductList from './components/ProductList'
 import type { ProductItem } from './components/ProductTypes'
-
-const initialProducts: ProductItem[] = [
-  {
-    id: '1',
-    name: 'Cap',
-    sku: '4557d20d-210e-499a-b00a-4ee31660eda0',
-    image: 'cap.svg',
-    category: 'Accessories',
-    price: '$8.00',
-    stock: 80,
-    status: 'inStock',
-    variants: [
-      { label: 'XL / ខ្មៅ ', stock: 10 },
-      { label: 'XL / ខៀវ ', stock: 10 },
-      { label: 'M / ខ្មៅ ', stock: 10 },
-      { label: 'M / ខៀវ', stock: 10 },
-    ],
-  },
-  {
-    id: '2',
-    name: "Man's shoe",
-    sku: '7de1b743-6b71-4484-bf5a-59fee8a5a387',
-    image: 'blueShoe.svg',
-    category: 'Footwear',
-    price: '$20.00',
-    stock: 6,
-    status: 'lowStock',
-    variants: [
-      { label: 'ខ្មៅ / S', stock: 4 },
-      { label: 'ស / L ', stock: 2, lowStock: true },
-      { label: 'ខៀវ / M ', stock: 0, lowStock: true },
-    ],
-  },
-
-  {
-    id: '3',
-    name: 'clothes',
-    sku: 'ef492630-7902-4a0b-81cc-a886b299a624',
-    image: 'YellowPant.svg',
-    category: 'Apparel',
-    price: '$10.00',
-    stock: 10,
-    status: 'inStock',
-    variants: [
-      { label: 'S / ខ្មៅ', stock: 5 },
-    ],
-  },
-  {
-    id: '4',
-    name: 'Dior Lipstick',
-    sku: '56d5e931-9ea6-4e7c-aa0b-ef491030090a',
-    image: 'DiorLipstick.svg',
-    category: 'Beauty',
-    price: '$49.00',
-    stock: 8,
-    status: 'inStock',
-    variants: [
-      { label: '100ml', stock: 8 },
-    ],
-  },
-]
+import { loadProducts, saveProducts } from '../ProductData'
 
 const sortOptions = [
   'newest',
@@ -85,23 +26,50 @@ const categoryOptions = [
 
 export default function ProductPage() {
   const { t } = useTranslation('product')
+  const location = useLocation()
   const [query, setQuery] = useState('')
   const [sortKey, setSortKey] = useState<typeof sortOptions[number]>('newest')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [products, setProducts] = useState<ProductItem[]>(() => loadProducts())
+
+  // Reload products whenever the page mounts, the route changes, or localStorage changes
+  useEffect(() => {
+    const refresh = () => setProducts(loadProducts())
+    const handleStorage = () => refresh()
+
+    refresh()
+    window.addEventListener('posProducts', refresh)
+    window.addEventListener('storage', handleStorage)
+
+    return () => {
+      window.removeEventListener('posProducts', refresh)
+      window.removeEventListener('storage', handleStorage)
+    }
+  }, [location.key, location.pathname])
+
+  const handleDelete = (id: string) => {
+    const nextProducts = products.filter((p) => p.id !== id)
+    setProducts(nextProducts)
+    saveProducts(nextProducts)
+  }
 
   const filteredProducts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
 
-    const filtered = initialProducts.filter((product) => {
+    const filtered = products.filter((product) => {
       const matchesQuery = [product.name, product.sku, product.category].some((value) =>
         value.toLowerCase().includes(normalizedQuery),
       )
 
-      const matchesCategory =
-        categoryFilter === 'all' || product.category === categoryFilter
+      const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter
 
       return matchesQuery && matchesCategory
     })
+
+    const getCreatedAtValue = (product: ProductItem) => {
+      const match = product.id.match(/^product-(\d+)/)
+      return match ? Number(match[1]) : 0
+    }
 
     if (sortKey === 'priceAsc') {
       return [...filtered].sort((a, b) => parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1)))
@@ -118,9 +86,12 @@ export default function ProductPage() {
     if (sortKey === 'oldest') {
       return [...filtered].reverse()
     }
+    if (sortKey === 'newest') {
+      return [...filtered].sort((a, b) => getCreatedAtValue(b) - getCreatedAtValue(a))
+    }
 
     return filtered
-  }, [query, sortKey, categoryFilter])
+  }, [products, query, sortKey, categoryFilter])
 
   const categoryOptionLabels = categoryOptions.map((option) => ({
     value: option.value,
@@ -130,7 +101,7 @@ export default function ProductPage() {
 
   return (
     <div className="flex flex-col gap-[10px] lg:gap-8">
-      <ProductHeader total={initialProducts.length} />
+      <ProductHeader total={products.length} />
 
       <ProductFilters
         query={query}
@@ -144,7 +115,7 @@ export default function ProductPage() {
         t={t}
       />
 
-      <ProductList products={filteredProducts} />
+      <ProductList products={filteredProducts} onDelete={handleDelete} />
     </div>
   )
 }

@@ -8,7 +8,23 @@ import { useNavigate } from 'react-router-dom'
 const MAX_VISIBLE_VARIANTS = 4
 const LOW_STOCK_THRESHOLD = 2
 
-export default function ProductCard({ product }: { product: ProductItem }) {
+const imageModules = import.meta.glob('../../../../assets/product/*.{svg,png,jpg,jpeg}', { eager: true }) as Record<
+  string,
+  { default: string }
+>
+
+const imageMap = Object.entries(imageModules).reduce<Record<string, string>>((map, [path, module]) => {
+  const fileName = path.split('/').pop() ?? ''
+  map[fileName] = module.default
+  return map
+}, {})
+
+interface ProductCardProps {
+  product: ProductItem
+  onDelete?: (id: string) => void
+}
+
+export default function ProductCard({ product, onDelete }: ProductCardProps) {
   const { t } = useTranslation('product')
   const navigate = useNavigate()
 
@@ -17,13 +33,11 @@ export default function ProductCard({ product }: { product: ProductItem }) {
 
   const imageSrc = (() => {
     if (!product.image) return ''
-    // If it's an absolute URL or already a root-relative path, use as-is
-    if (/^https?:\/\//.test(product.image) || product.image.startsWith('/')) return product.image
-    try {
-      return new URL(`../../../../assets/productList/${encodeURIComponent(product.image)}`, import.meta.url).href
-    } catch {
+    // If it's an absolute URL, root-relative path, or data URI, use as-is
+    if (/^https?:\/\//.test(product.image) || product.image.startsWith('/') || product.image.startsWith('data:')) {
       return product.image
     }
+    return imageMap[product.image] || product.image
   })()
 
   const LOW_STOCK_COLOR = 'bg-[var(--dp-danger-tint)] text-[var(--dp-danger)] border-[color-mix(in_srgb,var(--dp-danger)_18%,#fff)]'
@@ -225,7 +239,7 @@ export default function ProductCard({ product }: { product: ProductItem }) {
                   <Pencil size={18} strokeWidth={1.9} />
                 </span>
               </button>
-              <button type="button" className="inline-flex items-center justify-center p-2 rounded-full bg-transparent text-[var(--dp-danger-ink)] cursor-pointer font-[inherit] border-none transition-[background] duration-150 hover:bg-[var(--dp-danger-tint)]" aria-label={t('delete')}>
+              <button type="button" onClick={() => onDelete?.(product.id)} className="inline-flex items-center justify-center p-2 rounded-full bg-transparent text-[var(--dp-danger-ink)] cursor-pointer font-[inherit] border-none transition-[background] duration-150 hover:bg-[var(--dp-danger-tint)]" aria-label={t('delete')}>
                 <span className="inline-flex items-center justify-center flex-shrink-0 leading-none">
                   <Trash2 size={18} strokeWidth={1.9} />
                 </span>
