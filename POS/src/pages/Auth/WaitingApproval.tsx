@@ -3,10 +3,32 @@ import { useTranslation } from 'react-i18next'
 import BackButton from '../../components/BackButton'
 import logo from '../../assets/welcome/logo.png'
 import welcomeImage from '../../assets/login/photoLogin.png'
+import { getShopByPhone } from '../../stores/ShopData'
 
 function WaitingApproval() {
   const navigate = useNavigate()
   const { t } = useTranslation('auth')
+
+  const pendingShop = (() => {
+    try {
+      const raw = sessionStorage.getItem('posPendingShop')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed?.phone) return getShopByPhone(parsed.phone)
+      }
+    } catch {
+      // ignore
+    }
+    return undefined
+  })()
+
+  const isApproved = pendingShop?.status === 'approved'
+  const isRejected = pendingShop?.status === 'rejected'
+  const statusMessage = isApproved
+    ? 'Your application has been approved! You can now log in.'
+    : isRejected
+    ? 'Your application was rejected. Please contact support.'
+    : ''
 
   return (
     <div className="relative min-h-screen bg-slate-100 overflow-hidden lg:flex lg:items-center lg:justify-center">
@@ -34,6 +56,17 @@ function WaitingApproval() {
         <p className="text-center text-[11px] text-slate-500 mb-3 leading-relaxed">
           {t('waitingApproval.description')}
         </p>
+
+        {/* Status message */}
+        {statusMessage && (
+          <p
+            className={`mb-3 text-center text-xs font-semibold ${
+              isApproved ? 'text-green-700' : 'text-red-600'
+            }`}
+          >
+            {statusMessage}
+          </p>
+        )}
 
         {/* Steps - compact */}
         <div className="space-y-2 mb-3">
@@ -109,6 +142,15 @@ function WaitingApproval() {
             <p className="text-center text-sm text-slate-500 mt-2 leading-relaxed">
               {t('waitingApproval.description')}
             </p>
+            {statusMessage && (
+              <p
+                className={`mt-2 text-center text-sm font-semibold ${
+                  isApproved ? 'text-green-700' : 'text-red-600'
+                }`}
+              >
+                {statusMessage}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">

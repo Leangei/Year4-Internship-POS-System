@@ -8,6 +8,7 @@ import { FaFacebook, FaTelegram } from 'react-icons/fa'
 import BackButton from '../../components/BackButton'
 import welcomeImage from "../../assets/login/photoLogin.png"
 import logo from "../../assets/welcome/logo.png"
+import { loginShop } from '../../stores/ShopData'
 
 function Login() {
   const navigate = useNavigate()
@@ -15,10 +16,31 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const isFormValid =
     phone.trim() !== '' &&
     password.length >= 8
+
+  const handleLogin = () => {
+    if (!isFormValid) return
+    setError('')
+    const shop = loginShop(phone, password)
+    if (!shop) {
+      setError('Invalid phone number or password.')
+      return
+    }
+    if (shop.status === 'pending') {
+      navigate('/waiting-approval')
+      return
+    }
+    if (shop.status === 'rejected') {
+      setError('Your application was rejected.')
+      return
+    }
+    // Approved
+    navigate('/shopOwner')
+  }
 
   return (
     <div className="
@@ -98,10 +120,15 @@ overflow-y-auto
           <Link to="/forgot-password" className="text-sm text-red-500">{t("login.forgotPassword")}</Link>
         </div>
 
+        {/* Error */}
+        {error && (
+          <p className="mb-3 text-center text-sm text-red-600">{error}</p>
+        )}
+
         {/* Login Button */}
         <button
           disabled={!isFormValid}
-          onClick={() => navigate('/shopOwner')}
+          onClick={handleLogin}
           className={`w-full rounded-xl py-3 text-white font-semibold ${isFormValid ? "bg-green-900" : "bg-gray-400 cursor-not-allowed"}`}
         >
           {t("login.loginButton")}
@@ -170,7 +197,11 @@ overflow-y-auto
             <Link to="/forgot-password" className="text-sm text-red-500">{t("login.forgotPassword")}</Link>
           </div>
 
-          <button disabled={!isFormValid} onClick={() => navigate('/shopOwner')} className={`w-full rounded-xl py-2.5 text-white font-semibold shadow-md transition ${isFormValid ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}>{t("login.loginButton")}</button>
+          {error && (
+            <p className="text-center text-sm text-red-600">{error}</p>
+          )}
+
+          <button disabled={!isFormValid} onClick={handleLogin} className={`w-full rounded-xl py-2.5 text-white font-semibold shadow-md transition ${isFormValid ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}>{t("login.loginButton")}</button>
 
           <div className="text-center text-sm text-slate-500 mt-3">{t("login.orLoginWith")}</div>
 

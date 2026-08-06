@@ -10,7 +10,15 @@ import kmHomepage from "./khmer/homepage.json";
 import enProduct from "./english/product.json";
 import kmProduct from "./khmer/product.json";
 
-const flattenProductTranslations = (resource: Record<string, any>) => ({
+type ProductTranslationResource = {
+  list?: Record<string, string>;
+  detail?: Record<string, string>;
+  create?: Record<string, string>;
+  edit?: Record<string, string>;
+  variant?: Record<string, string>;
+};
+
+const flattenProductTranslations = (resource: ProductTranslationResource) => ({
   ...resource.list,
   ...resource.detail,
   ...resource.create,

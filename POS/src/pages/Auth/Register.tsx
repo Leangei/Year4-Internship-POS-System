@@ -8,24 +8,42 @@ import googleIcon from "../../assets/login/google.svg"
 import welcomeImage from "../../assets/login/photoLogin.png"
 import logo from "../../assets/welcome/logo.png"
 import BackButton from '../../components/BackButton'
+import { registerShop } from '../../stores/ShopData'
 
 function Register() {
   const navigate = useNavigate()
   const { t } = useTranslation("auth")
+  const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [shopName, setShopName] = useState('')
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [agreeTerms, setAgreeTerms] = useState(false)
 
   const isFormValid =
+    shopName.trim() !== '' &&
     name.trim() !== '' &&
+    email.trim() !== '' &&
     phone.trim() !== '' &&
     password.length >= 8 &&
     confirmPassword.length >= 8 &&
     agreeTerms
+
+  const handleRegister = () => {
+    if (!isFormValid) return
+    setError('')
+    try {
+      registerShop(shopName, email, name, phone, password)
+      sessionStorage.setItem('posPendingShop', JSON.stringify({ name, phone }))
+      navigate('/waiting-approval')
+    } catch {
+      setError('Failed to create account. Please try again.')
+    }
+  }
 
   return (
     <div className="relative min-h-screen bg-slate-100 overflow-hidden lg:flex lg:items-center lg:justify-center">
@@ -47,7 +65,20 @@ function Register() {
         {/* Title */}
         <h2 className="text-lg text-center font-extrabold text-[#01361C] mb-4">{t("register.title")}</h2>
 
-        {/* Name */}
+        {/* Shop Name */}
+        <label className="text-xs text-gray-600 mb-1">Shop Name</label>
+        <div className="relative mb-3">
+          <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Shop Name"
+            value={shopName}
+            onChange={e => setShopName(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+          />
+        </div>
+
+        {/* Name (Owner) */}
         <label className="text-xs text-gray-600 mb-1">{t("register.nameLabel")}</label>
         <div className="relative mb-3">
           <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -56,6 +87,19 @@ function Register() {
             placeholder={t("register.namePlaceholder")}
             value={name}
             onChange={e => setName(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+          />
+        </div>
+
+        {/* Email */}
+        <label className="text-xs text-gray-600 mb-1">Email</label>
+        <div className="relative mb-3">
+          <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
           />
         </div>
@@ -119,10 +163,15 @@ function Register() {
           <span>{t("register.agreeTerms")}</span>
         </label>
 
+        {/* Error */}
+        {error && (
+          <p className="mb-3 text-center text-xs text-red-600">{error}</p>
+        )}
+
         {/* Register Button */}
         <button
           type="button"
-          onClick={() => isFormValid && navigate('/waiting-approval')}
+          onClick={handleRegister}
           disabled={!isFormValid}
           className={`w-full rounded-xl py-2.5 text-sm text-white font-semibold ${isFormValid ? "bg-green-900" : "bg-gray-400 cursor-not-allowed"}`}
         >
@@ -167,10 +216,26 @@ function Register() {
           <h2 className="text-2xl text-center font-extrabold text-[#01361C]">{t("register.title")}</h2>
 
           <div>
+            <label className="block text-sm text-gray-600 mb-1">Shop Name</label>
+            <div className="relative">
+              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input type="text" placeholder="Shop Name" value={shopName} onChange={e => setShopName(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300" />
+            </div>
+          </div>
+
+          <div>
             <label className="block text-sm text-gray-600 mb-1">{t("register.nameLabel")}</label>
             <div className="relative">
               <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input type="text" placeholder={t("register.namePlaceholder")} value={name} onChange={e => setName(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Email</label>
+            <div className="relative">
+              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-transparent pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-300" />
             </div>
           </div>
 
@@ -209,9 +274,13 @@ function Register() {
             <span>{t("register.agreeTerms")}</span>
           </label>
 
+          {error && (
+            <p className="text-center text-sm text-red-600">{error}</p>
+          )}
+
           <button
             type="button"
-            onClick={() => isFormValid && navigate('/waiting-approval')}
+            onClick={handleRegister}
             disabled={!isFormValid}
             className={`w-full rounded-xl py-2.5 text-white font-semibold shadow-md transition ${isFormValid ? 'bg-green-900 hover:bg-green-800' : 'bg-gray-400 cursor-not-allowed'}`}
           >
