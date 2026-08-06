@@ -7,6 +7,10 @@ interface EditGeneralInfoProps {
   initialCategory?: string
   initialPrice?: string
   initialDescription?: string
+  onNameChange?: (value: string) => void
+  onCategoryChange?: (value: string) => void
+  onPriceChange?: (value: string) => void
+  onDescriptionChange?: (value: string) => void
 }
 
 export default function EditGeneralInfo({
@@ -14,6 +18,10 @@ export default function EditGeneralInfo({
   initialCategory = 'accessories',
   initialPrice = '8',
   initialDescription = 'Good Qaunlity',
+  onNameChange,
+  onCategoryChange,
+  onPriceChange,
+  onDescriptionChange,
 }: EditGeneralInfoProps) {
   const { t } = useTranslation('productDetail')
   const [name, setName] = useState(initialName)
@@ -49,7 +57,10 @@ export default function EditGeneralInfo({
           <input
             id="cat-name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value)
+              onNameChange?.(e.target.value)
+            }}
             placeholder={t('enterProductName') || 'បញ្ចូលឈ្មោះផលិតផល'}
             className="
               w-full px-3.5 py-2.5 rounded-[var(--dp-r-field)]
@@ -72,7 +83,10 @@ export default function EditGeneralInfo({
             <select
               id="cat-cat"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                setCategory(e.target.value)
+                onCategoryChange?.(e.target.value)
+              }}
               className="
                 w-full appearance-none px-3.5 py-2.5 pr-9
                 rounded-[var(--dp-r-field)]
@@ -107,7 +121,10 @@ export default function EditGeneralInfo({
           step={0.01}
           inputMode="decimal"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => {
+            setPrice(e.target.value)
+            onPriceChange?.(e.target.value)
+          }}
           placeholder="$0.00"
           className="
             w-full px-3.5 py-2.5 rounded-[var(--dp-r-field)]
@@ -129,7 +146,10 @@ export default function EditGeneralInfo({
         <textarea
           id="cat-desc"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value)
+            onDescriptionChange?.(e.target.value)
+          }}
           maxLength={maxChars}
           placeholder={t('enterDetails') || 'បញ្ចូលពត៌មានលម្អិតផលិតផល'}
           rows={3}

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, type ReactNode } from 'react'
 import type { ProductItem, ProductStatus } from '../ShopOwner/Product/Productlist/components/ProductTypes'
 import { ProductStoreContext, type CreateProductInput, type ProductSortKey, type ProductStoreContextValue } from './ProductStoreContext'
-
-const PRODUCTS_STORAGE_KEY = 'posProducts'
+import { loadProducts, saveProducts } from '../ShopOwner/Product/ProductData'
 
 interface ProductStoreState {
   products: ProductItem[]
@@ -58,77 +57,6 @@ const buildProduct = (input: CreateProductInput): ProductItem => {
   }
 }
 
-const initialProducts: ProductItem[] = [
-  {
-    id: '1',
-    name: 'Cap',
-    sku: '4557d20d-210e-499a-b00a-4ee31660eda0',
-    image: 'cap.svg',
-    category: 'Accessories',
-    price: '$8.00',
-    stock: 80,
-    status: 'inStock',
-    variants: [
-      { label: 'XL / ខ្មៅ ', stock: 10 },
-      { label: 'XL / ខៀវ ', stock: 10 },
-      { label: 'M / ខ្មៅ ', stock: 10 },
-      { label: 'M / ខៀវ', stock: 10 },
-    ],
-  },
-  {
-    id: '2',
-    name: "Man's shoe",
-    sku: '7de1b743-6b71-4bf5-a59f-ee8a5a387',
-    image: 'blueShoe.svg',
-    category: 'Footwear',
-    price: '$20.00',
-    stock: 6,
-    status: 'lowStock',
-    variants: [
-      { label: 'ខ្មៅ / S', stock: 4 },
-      { label: 'ស / L ', stock: 2, lowStock: true },
-      { label: 'ខៀវ / M ', stock: 0, lowStock: true },
-    ],
-  },
-  {
-    id: '3',
-    name: 'clothes',
-    sku: 'ef492630-7902-4a0b-81cc-a886b299a624',
-    image: 'YellowPant.svg',
-    category: 'Apparel',
-    price: '$10.00',
-    stock: 10,
-    status: 'inStock',
-    variants: [{ label: 'S / ខ្មៅ', stock: 5 }],
-  },
-  {
-    id: '4',
-    name: 'Dior Lipstick',
-    sku: '56d5e931-9ea6-4e7c-aa0b-ef491030090a',
-    image: 'DiorLipstick.svg',
-    category: 'Beauty',
-    price: '$49.00',
-    stock: 8,
-    status: 'inStock',
-    variants: [{ label: '100ml', stock: 8 }],
-  },
-]
-
-const loadProducts = (): ProductItem[] => {
-  try {
-    const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY)
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed
-      }
-    }
-  } catch {
-    // ignore corrupted storage
-  }
-  return initialProducts
-}
-
 const initialState: ProductStoreState = {
   products: loadProducts(),
   selectedProductId: null,
@@ -176,13 +104,11 @@ const productReducer = (state: ProductStoreState, action: ProductStoreAction): P
 export function ProductStoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(productReducer, initialState)
 
-  // Persist products to localStorage whenever they change
+  // Persist products to localStorage whenever they change.
+  // Uses the shared quota-aware saveProducts which progressively compresses
+  // images if the write would exceed the storage quota.
   useEffect(() => {
-    try {
-      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(state.products))
-    } catch {
-      // storage may be full — ignore
-    }
+    void saveProducts(state.products)
   }, [state.products])
 
   const fetchProducts = useCallback(() => {

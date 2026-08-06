@@ -1026,9 +1026,63 @@
   color: var(--dp-danger);
 }
 
+/* Apply-to-all helpers */
+.vb-apply-all {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--dp-line);
+  border-radius: 12px;
+  background: var(--dp-surface-2);
+}
+
+.vb-apply-input {
+  width: 80px;
+  border: 1px solid var(--dp-line);
+  border-radius: 8px;
+  background: white;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: var(--dp-ink);
+  outline: none;
+  transition: border-color 150ms ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.vb-apply-input:focus {
+  border-color: var(--dp-green-500);
+}
+
+.vb-apply-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--dp-green-500);
+  background: white;
+  color: var(--dp-green-900);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.vb-apply-btn:hover {
+  background: var(--dp-green-900);
+  color: white;
+}
+
 @media (max-width: 900px) {
   .cat-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* On mobile, show the About Product (preview) column first */
+  .vb-grid > .cat-col:last-child {
+    order: -1;
   }
 }
 

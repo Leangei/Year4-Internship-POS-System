@@ -47,10 +47,10 @@ export default function ProductPage() {
     }
   }, [location.key, location.pathname])
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     const nextProducts = products.filter((p) => p.id !== id)
     setProducts(nextProducts)
-    saveProducts(nextProducts)
+    await saveProducts(nextProducts)
   }
 
   const filteredProducts = useMemo(() => {
@@ -95,7 +95,7 @@ export default function ProductPage() {
 
   const categoryOptionLabels = categoryOptions.map((option) => ({
     value: option.value,
-    label: t(option.labelKey),
+    label: t(`list.${option.labelKey}`),
     icon: option.icon,
   }))
 

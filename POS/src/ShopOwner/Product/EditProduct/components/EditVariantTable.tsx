@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, Trash2, X } from 'lucide-react'
+import type { ProductVariant } from '../../Productlist/components/ProductTypes'
 
 interface VariantRow {
   id: string
@@ -15,65 +16,170 @@ interface CustomColumn {
   name: string
 }
 
+interface EditVariantTableProps {
+  initialVariants?: ProductVariant[]
+  onVariantsChange?: (variants: ProductVariant[]) => void
+}
+
 let colIdCounter = 0
 
-const initialVariants: VariantRow[] = [
-  { id: '1', size: 'XL', price: '', stock: '10', custom: {} },
-  { id: '2', size: 'XL', price: '', stock: '10', custom: {} },
-  { id: '3', size: 'S', price: '', stock: '10', custom: {} },
-]
+const defaultVariants: VariantRow[] = []
 
-export default function EditVariantTable() {
+export default function EditVariantTable({ initialVariants, onVariantsChange }: EditVariantTableProps) {
   const { t } = useTranslation('productDetail')
-  const [variants, setVariants] = useState<VariantRow[]>(initialVariants)
-  const [customCols, setCustomCols] = useState<CustomColumn[]>([])
-  const [showSize, setShowSize] = useState(true)
+
+  // Build initial custom columns from existing variant attributes (excluding size)
+  const buildInitialCols = (): CustomColumn[] => {
+    if (!initialVariants || initialVariants.length === 0) return []
+    const keys = new Set<string>()
+    initialVariants.forEach((v) => {
+      if (v.attributes) {
+        Object.keys(v.attributes).forEach((key) => {
+          if (key !== 'size') keys.add(key)
+        })
+      }
+    })
+    return Array.from(keys).map((key) => ({ id: `col-${++colIdCounter}`, name: key }))
+  }
+
+  const initialCols = buildInitialCols()
+
+  const [variants, setVariants] = useState<VariantRow[]>(() =>
+    (initialVariants && initialVariants.length > 0
+      ? initialVariants.map((v, i) => {
+          // If attributes exist, populate size + custom columns from them
+          if (v.attributes) {
+            const size = v.attributes.size ?? ''
+            const custom: Record<string, string> = {}
+            initialCols.forEach((col) => {
+              custom[col.id] = v.attributes?.[col.name] ?? ''
+            })
+            return {
+              id: `v-${i}`,
+              size,
+              price: v.price ?? '',
+              stock: String(v.stock),
+              custom,
+            }
+          }
+          // Fallback: use the combined label
+          return {
+            id: `v-${i}`,
+            size: v.label,
+            price: v.price ?? '',
+            stock: String(v.stock),
+            custom: {},
+          }
+        })
+      : defaultVariants) as VariantRow[],
+  )
+  const [customCols, setCustomCols] = useState<CustomColumn[]>(initialCols)
+  // Only show the Size column if existing variants actually have a size attribute.
+  // If there are no variants yet, hide it — the user adds it via the + Size button.
+  const [showSize, setShowSize] = useState(() => {
+    if (!initialVariants || initialVariants.length === 0) return false
+    return initialVariants.some((v) => v.attributes?.size)
+  })
+
+  const emitVariants = (next: VariantRow[]) => {
+    if (!onVariantsChange) return
+    onVariantsChange(
+      next.map((v) => {
+        // Build structured attributes: size + custom columns (color, volume, etc.)
+        // Use the column NAME (translated) as the attribute key, not the raw ID
+        const attributes: Record<string, string> = {}
+        if (v.size) attributes.size = v.size
+        Object.entries(v.custom).forEach(([key, value]) => {
+          if (!value) return
+          const col = customCols.find((c) => c.id === key)
+          const attrKey = col?.name || key
+          attributes[attrKey] = value
+        })
+
+        // Combine size + all custom values (color, volume, etc.) into the label,
+        // matching the create flow's format, e.g. "S / Black"
+        const labelParts = [v.size, ...Object.values(v.custom).filter(Boolean)]
+        return {
+          label: labelParts.filter(Boolean).join(' / ') || 'Variant',
+          stock: Number(v.stock) || 0,
+          lowStock: Number(v.stock) > 0 && Number(v.stock) <= 5,
+          price: v.price,
+          attributes,
+        } as ProductVariant
+      }),
+    )
+  }
+
+  // Sync the parent's variants state with the editor's initial variants on mount
+  useEffect(() => {
+    emitVariants(variants)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleDeleteRow = (id: string) => {
-    setVariants((prev) => prev.filter((v) => v.id !== id))
+    setVariants((prev) => {
+      const next = prev.filter((v) => v.id !== id)
+      emitVariants(next)
+      return next
+    })
   }
 
   const handleChange = (id: string, field: string, value: string) => {
-    setVariants((prev) =>
-      prev.map((v) => {
+    setVariants((prev) => {
+      const next = prev.map((v) => {
         if (v.id !== id) return v
         if (field === 'size' || field === 'price' || field === 'stock') {
           return { ...v, [field]: value }
         }
         return { ...v, custom: { ...v.custom, [field]: value } }
       })
-    )
+      emitVariants(next)
+      return next
+    })
   }
 
   const handleAddRow = () => {
     const newId = `row-${Date.now()}`
-    setVariants((prev) => [
-      ...prev,
-      { id: newId, size: '', price: '', stock: '0', custom: {} },
-    ])
+    setVariants((prev) => {
+      const next = [...prev, { id: newId, size: '', price: '', stock: '0', custom: {} }]
+      emitVariants(next)
+      return next
+    })
   }
 
   const handleAddColumn = () => {
     const newColId = `col-${++colIdCounter}`
     setCustomCols((prev) => [...prev, { id: newColId, name: '' }])
-    setVariants((prev) =>
-      prev.map((v) => ({
+    setVariants((prev) => {
+      const next = prev.map((v) => ({
         ...v,
         custom: { ...v.custom, [newColId]: '' },
       }))
-    )
+      // If there are no rows yet, add one so the user can start filling in data
+      if (next.length === 0) {
+        next.push({ id: `row-${Date.now()}`, size: '', price: '', stock: '0', custom: { [newColId]: '' } })
+      }
+      emitVariants(next)
+      return next
+    })
   }
 
   const handleAddStandardColumn = (name: string) => {
     if (!customCols.find((c) => c.name === name)) {
       const newColId = `col-${++colIdCounter}`
       setCustomCols((prev) => [...prev, { id: newColId, name }])
-      setVariants((prev) =>
-        prev.map((v) => ({
+      setVariants((prev) => {
+        const next = prev.map((v) => ({
           ...v,
           custom: { ...v.custom, [newColId]: '' },
         }))
-      )
+        // If there are no rows yet, add one so the user can start filling in data
+        if (next.length === 0) {
+          next.push({ id: `row-${Date.now()}`, size: '', price: '', stock: '0', custom: { [newColId]: '' } })
+        }
+        emitVariants(next)
+        return next
+      })
     }
   }
 
@@ -343,6 +449,26 @@ export default function EditVariantTable() {
         <span className="text-xs text-[var(--dp-muted)] w-full sm:w-auto">
           {t('orStandard') || 'ឬស្តង់ដារ ៖'}
         </span>
+        {!showSize && (
+          <button
+            type="button"
+            onClick={() => {
+              setShowSize(true)
+              setVariants((prev) => {
+                // If there are no rows yet, add one so the user can start filling in data
+                const next = prev.length === 0
+                  ? [...prev, { id: `row-${Date.now()}`, size: '', price: '', stock: '0', custom: {} }]
+                  : prev
+                emitVariants(next)
+                return next
+              })
+            }}
+            className="inline-flex min-h-[40px] items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-[var(--dp-body)] hover:bg-[var(--dp-surface-2)] transition-colors touch-manipulation"
+          >
+            <Plus size={15} strokeWidth={1.9} />
+            <span>{t('size') || 'Size'}</span>
+          </button>
+        )}
         {!customCols.find((c) => c.name === (t('color') || 'Color')) && (
           <button
             type="button"

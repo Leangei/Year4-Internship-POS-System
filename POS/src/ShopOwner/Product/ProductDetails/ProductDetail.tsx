@@ -9,6 +9,7 @@ import ProductStats from './components/ProductStats'
 import ProductVariantTable from './components/ProductVariantTable'
 import FacebookCaption from './components/FacebookCaption'
 import { getProductById } from '../ProductData'
+import { getUniqueVariantColors } from '../../../utils/variantColors'
 
 export default function ProductDetail() {
   const { t } = useTranslation('productDetail')
@@ -32,13 +33,17 @@ export default function ProductDetail() {
 
   return (
     <div className="p-3 sm:p-4 lg:p-8 max-w-7xl mx-auto flex flex-col gap-4 sm:gap-6">
-      <ProductDetailHeader productId={product.sku} productName={product.name} />
+      <ProductDetailHeader productId={product.id} productName={product.name} productSku={product.sku} />
 
       <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6">
         <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6">
           <ProductGallery product={product} />
           <div className="hidden lg:block">
-            <FacebookCaption />
+            <FacebookCaption
+              name={product.name}
+              price={product.price}
+              colors={getUniqueVariantColors(product.variants)}
+            />
           </div>
         </div>
 
@@ -47,20 +52,23 @@ export default function ProductDetail() {
           <ProductStats product={product} />
           <ProductDescription description={product.description} />
           <ProductVariantTable variants={product.variants} price={product.price} />
+          <button
+            type="button"
+            onClick={() => navigate('/shopOwner/orders')}
+            className="w-full rounded-xl bg-[#00351B] py-3.5 font-semibold text-white text-sm cursor-pointer hover:bg-[#004d24] transition-colors"
+          >
+            + {t('addNewOrder')}
+          </button>
         </div>
       </div>
 
       <div className="lg:hidden">
-        <FacebookCaption />
+        <FacebookCaption
+          name={product.name}
+          price={product.price}
+          colors={getUniqueVariantColors(product.variants)}
+        />
       </div>
-
-      <button
-        type="button"
-        onClick={() => navigate(`/shopOwner/products/${product.id}/edit`)}
-        className="w-full rounded-xl bg-[#00351B] py-3.5 font-semibold text-white text-sm cursor-pointer hover:bg-[#004d24] transition-colors"
-      >
-        {t('editProduct')}
-      </button>
     </div>
   )
 }

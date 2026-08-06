@@ -7,6 +7,15 @@ interface CategoryOption {
   icon: 'all' | 'clothing' | 'cosmetics' | 'shoes' | 'accessories'
 }
 
+const sortOptionLabels: Record<string, string> = {
+  newest: 'newest',
+  oldest: 'oldest',
+  priceDesc: 'priceDesc',
+  priceAsc: 'priceAsc',
+  stockAsc: 'stockAsc',
+  name: 'name',
+}
+
 interface ProductFiltersProps {
   query: string
   setQuery: (q: string) => void
@@ -48,15 +57,15 @@ export default function ProductFilters({
           <input
             type="search"
             className="flex-1 min-w-0 border-none bg-transparent font-[inherit] text-xs leading-[1.4] text-[var(--dp-ink)] outline-none p-0 placeholder:text-[var(--dp-muted)]"
-            placeholder={t('searchPlaceholder')}
-            aria-label={t('searchPlaceholder')}
+            placeholder={t('list.searchPlaceholder')}
+            aria-label={t('list.searchPlaceholder')}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
         </div>
         {/* Sort */}
         <div className="flex-shrink-0 flex items-center gap-1">
-          <label className="text-[10px] leading-[1.4] text-[var(--dp-muted)] whitespace-nowrap" htmlFor="cat-sort-mobile">{t('sortBy')}</label>
+          <label className="text-[10px] leading-[1.4] text-[var(--dp-muted)] whitespace-nowrap" htmlFor="cat-sort-mobile">{t('list.sortBy')}</label>
           <span className="relative inline-flex items-center">
             <select
               id="cat-sort-mobile"
@@ -66,7 +75,7 @@ export default function ProductFilters({
             >
               {sortOptions.map((option) => (
                 <option key={option} value={option}>
-                  {t(option)}
+                  {t(`list.${sortOptionLabels[option]}`)}
                 </option>
               ))}
             </select>
@@ -110,8 +119,8 @@ export default function ProductFilters({
           <input
             type="search"
             className="flex-1 min-w-0 border-none bg-transparent font-[inherit] text-sm leading-[var(--dp-lh-sm)] text-[var(--dp-ink)] outline-none p-0 placeholder:text-[var(--dp-muted)]"
-            placeholder={t('searchPlaceholder')}
-            aria-label={t('searchPlaceholder')}
+            placeholder={t('list.searchPlaceholder')}
+            aria-label={t('list.searchPlaceholder')}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -141,7 +150,7 @@ export default function ProductFilters({
 
           {/* Sort */}
           <div className="flex-shrink-0 flex items-center gap-2 w-full lg:w-auto">
-            <label className="text-sm leading-[var(--dp-lh-sm)] text-[var(--dp-muted)] whitespace-nowrap" htmlFor="cat-sort">{t('sortBy')}</label>
+            <label className="text-sm leading-[var(--dp-lh-sm)] text-[var(--dp-muted)] whitespace-nowrap" htmlFor="cat-sort">{t('list.sortBy')}</label>
             <span className="relative inline-flex items-center">
               <select
                 id="cat-sort"
@@ -151,7 +160,7 @@ export default function ProductFilters({
               >
                 {sortOptions.map((option) => (
                   <option key={option} value={option}>
-                    {t(option)}
+                    {t(`list.${sortOptionLabels[option]}`)}
                   </option>
                 ))}
               </select>

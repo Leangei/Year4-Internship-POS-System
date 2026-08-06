@@ -1,5 +1,7 @@
 {
   "productDetail": "ព័ត៌មានលម្អិតផលិតផល",
+  "createProduct": "បង្កើតផលិតផលថ្មី",
+  "saveError": "បរាជ័យក្នុងការរក្សាទុកផលិតផល។ រូបភាពអាចធំពេក — សូមលុបរូបភាពខ្លះ ឬប្រើរូបភាពតូចជាងនេះ។",
   "editProduct": "កែសម្រួលផលិតផល",
   "inStock": "ក្នុងស្តុក",
   "addedOn": "បញ្ចូលនៅថ្ងៃទី {{date}}",
@@ -57,5 +59,16 @@
   "customVariantNamePlaceholder": "ឧ. រសជាតិ, សម្ភារៈ...",
   "customVariantValue": "តម្លៃប្រភេទ",
   "customVariantValuePlaceholder": "បញ្ចូលតម្លៃ...",
-  "generateCombinations": "បង្កើតបំរែបំរួល"
+  "generateCombinations": "បង្កើតបំរែបំរួល",
+  "volume": "ចំណុះ",
+  "apply": "អនុវត្ត",
+  "applyPriceToAll": "អនុវត្តតម្លៃទៅទាំងអស់",
+  "applyStockToAll": "អនុវត្តស្តុកទៅទាំងអស់",
+  "white": "ស",
+  "black": "ខ្មៅ",
+  "red": "ក្រហម",
+  "orange": "ទឹកក្រូច",
+  "pink": "ផ្កាឈូក",
+  "yellow": "លឿង",
+  "addNewOrder": "បន្ថែមការកម្មង់ថ្មី"
 }

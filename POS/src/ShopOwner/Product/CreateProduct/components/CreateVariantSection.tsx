@@ -13,6 +13,7 @@ export default function CreateVariantSection({ draft }: CreateVariantSectionProp
 
   const handleClick = () => {
     sessionStorage.setItem('posProductDraft', JSON.stringify(draft))
+    // Don't clear posVariantState — it persists so data isn't lost when going back and re-entering
     navigate('/shopOwner/products/variants')
   }
 

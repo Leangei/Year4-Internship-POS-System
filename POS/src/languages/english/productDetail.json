@@ -1,5 +1,7 @@
 {
   "productDetail": "Product Detail",
+  "createProduct": "Create New Product",
+  "saveError": "Failed to save product. The images may be too large — try removing some images or using smaller photos.",
   "editProduct": "Edit Product",
   "inStock": "In Stock",
   "addedOn": "Added on {{date}}",
@@ -57,5 +59,16 @@
   "customVariantNamePlaceholder": "e.g. Flavor, Material...",
   "customVariantValue": "Variant Value",
   "customVariantValuePlaceholder": "Enter value...",
-  "generateCombinations": "Generate Combinations"
+  "generateCombinations": "Generate Combinations",
+  "volume": "Volume",
+  "apply": "Apply",
+  "applyPriceToAll": "Apply price to all",
+  "applyStockToAll": "Apply stock to all",
+  "white": "White",
+  "black": "Black",
+  "red": "Red",
+  "orange": "Orange",
+  "pink": "Pink",
+  "yellow": "Yellow",
+  "addNewOrder": "Add New Order"
 }

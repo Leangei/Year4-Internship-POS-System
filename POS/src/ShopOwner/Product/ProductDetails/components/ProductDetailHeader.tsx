@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next'
 interface ProductDetailHeaderProps {
   productId: string
   productName: string
+  productSku?: string
 }
 
 export default function ProductDetailHeader({
   productId,
   productName,
+  productSku,
 }: ProductDetailHeaderProps) {
   const { t } = useTranslation('productDetail')
   const navigate = useNavigate()
@@ -31,7 +33,7 @@ export default function ProductDetailHeader({
 
         <button
   type="button"
-  onClick={() => navigate(-1)}
+  onClick={() => navigate('/shopOwner/products')}
   aria-label="Back"
   className="
     inline-flex
@@ -67,7 +69,7 @@ export default function ProductDetailHeader({
               mb-1
             "
           >
-            #{productId}
+            #{productSku || productId}
           </span>
 
 

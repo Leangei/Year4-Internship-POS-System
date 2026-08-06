@@ -3,6 +3,7 @@ import type { LucideProps } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { ProductItem } from '../../Productlist/components/ProductTypes'
 import { useTranslation } from 'react-i18next'
+import { getVariantPriceRange } from '../../../../utils/productPrice'
 
 interface ProductInfoCardProps {
   product: ProductItem
@@ -33,6 +34,21 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       ? 'Low stock'
       : 'Out of stock'
 
+  const categoryLabel = (() => {
+    switch (product.category) {
+      case 'Apparel':
+        return t('clothing') || 'Clothing'
+      case 'Beauty':
+        return t('cosmetics') || 'Cosmetics'
+      case 'Footwear':
+        return t('shoes') || 'Shoes'
+      case 'Accessories':
+        return t('accessories') || 'Accessories'
+      default:
+        return product.category
+    }
+  })()
+
   return (
     <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-5">
       <div className="flex justify-between gap-4">
@@ -41,7 +57,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           <p className="text-sm text-[#666666]">#{product.sku}</p>
           <div className="mt-3 flex items-center gap-2 text-sm text-[#404941]">
             <CategoryIconComponent size={15} strokeWidth={1.7} className="text-[var(--dp-green-600)]" />
-            {product.category}
+            {categoryLabel}
           </div>
         </div>
 
@@ -51,7 +67,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
         </span>
       </div>
 
-      <h2 className="mt-6 text-3xl font-bold text-[#00351B]">{product.price}</h2>
+      <h2 className="mt-6 text-3xl font-bold text-[#00351B]">{getVariantPriceRange(product)}</h2>
       <p className="mt-2 text-sm text-[#666666]">{t('addedOn', { date: 'July 29, 2026' })}</p>
     </div>
   )

@@ -17,7 +17,7 @@ interface CustomVariantType {
 }
 
 const sizePresets = ['S', 'M', 'L', 'XL', 'XXL']
-const colorPresets = ['ស', 'ខ្មៅ', 'ក្រហម', 'ទឹកក្រូច', 'ផ្កាឈូក', 'លឿង']
+const colorPresetKeys = ['white', 'black', 'red', 'orange', 'pink', 'yellow']
 const volumePresets = ['500ml', '700ml', '1000ml']
 
 const typeIcons: Record<string, React.ReactNode> = {
@@ -67,18 +67,39 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
     const { t } = useTranslation('productDetail')
     const [draft] = useState<ProductDraft>(loadDraft)
 
-    const [activeTypes, setActiveTypes] = useState<string[]>([])
-    const [sizeOptions, setSizeOptions] = useState<string[]>([])
-    const [colorOptions, setColorOptions] = useState<string[]>([])
-    const [volumeOptions, setVolumeOptions] = useState<string[]>([])
-    const [customTypes, setCustomTypes] = useState<CustomVariantType[]>([])
-    const [customValues, setCustomValues] = useState<Record<string, string[]>>({})
+    // Load persisted variant builder state from sessionStorage
+    const loadVariantState = () => {
+      if (typeof window === 'undefined') return null
+      try {
+        const raw = sessionStorage.getItem('posVariantState')
+        if (!raw) return null
+        return JSON.parse(raw)
+      } catch {
+        return null
+      }
+    }
+
+    const savedVariantState = loadVariantState()
+
+    const [activeTypes, setActiveTypes] = useState<string[]>(savedVariantState?.activeTypes ?? [])
+    const [sizeOptions, setSizeOptions] = useState<string[]>(savedVariantState?.sizeOptions ?? [])
+    const [colorOptions, setColorOptions] = useState<string[]>(savedVariantState?.colorOptions ?? [])
+    const [volumeOptions, setVolumeOptions] = useState<string[]>(savedVariantState?.volumeOptions ?? [])
+    const [customTypes, setCustomTypes] = useState<CustomVariantType[]>(savedVariantState?.customTypes ?? [])
+    const [customValues, setCustomValues] = useState<Record<string, string[]>>(savedVariantState?.customValues ?? {})
     const [sizeInput, setSizeInput] = useState('')
     const [colorInput, setColorInput] = useState('')
     const [volumeInput, setVolumeInput] = useState('')
 
     // Price & stock stored per combination label so values persist when combinations change
-    const [priceStockMap, setPriceStockMap] = useState<Record<string, { price: string; stock: string }>>({})
+    const [priceStockMap, setPriceStockMap] = useState<Record<string, { price: string; stock: string }>>(savedVariantState?.priceStockMap ?? {})
+
+    // Default price/stock applied to all current AND future variants
+    const [defaultPrice, setDefaultPrice] = useState(savedVariantState?.defaultPrice ?? '')
+    const [defaultStock, setDefaultStock] = useState(savedVariantState?.defaultStock ?? '')
+
+    // Track which variant rows the user has explicitly deleted
+    const [deletedVariants, setDeletedVariants] = useState<string[]>(savedVariantState?.deletedVariants ?? [])
 
     // Custom variant form state
     const [showCustomForm, setShowCustomForm] = useState(false)
@@ -87,8 +108,12 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
     const [customValuesTemp, setCustomValuesTemp] = useState<string[]>([])
 
     const toggleType = (type: string) => {
-      if (!activeTypes.includes(type)) {
-        setActiveTypes((prev) => [...prev, type])
+      if (activeTypes.includes(type)) {
+        // Close the card — the category button appears back
+        setActiveTypes((prev) => prev.filter((t) => t !== type))
+      } else {
+        // Newly added type cards appear on top (first added is at the bottom)
+        setActiveTypes((prev) => [type, ...prev])
       }
     }
 
@@ -96,7 +121,7 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
     const getTypeLabel = (type: string) => {
       if (type === 'size') return t('size') || 'Size'
       if (type === 'color') return t('color') || 'Color'
-      if (type === 'volume') return t('power') || 'Volume'
+      if (type === 'volume') return t('volume') || 'Volume'
       const custom = customTypes.find((c) => c.key === type)
       return custom ? custom.name : type
     }
@@ -123,7 +148,7 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
 
     const getTypePresets = (type: string): string[] => {
       if (type === 'size') return sizePresets
-      if (type === 'color') return colorPresets
+      if (type === 'color') return colorPresetKeys.map((key) => t(key))
       if (type === 'volume') return volumePresets
       return []
     }
@@ -227,7 +252,7 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
 
       setCustomTypes((prev) => [...prev, { key, name }])
       setCustomValues((prev) => ({ ...prev, [key]: [...customValuesTemp] }))
-      setActiveTypes((prev) => [...prev, key])
+      setActiveTypes((prev) => [key, ...prev])
 
       closeCustomForm()
     }
@@ -269,19 +294,21 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
         combos.splice(0, combos.length, ...next)
       })
 
-      return combos.map((combo, index) => {
-        const key = activeTypes.map((type) => combo[type] || '').filter(Boolean).join(' / ')
-        const saved = priceStockMap[key] || { price: '', stock: '' }
-        return {
-          key,
-          id: `v-${key}-${index}`,
-          values: combo,
-          price: saved.price,
-          stock: saved.stock,
-        }
-      })
+      return combos
+        .map((combo, index) => {
+          const key = activeTypes.map((type) => combo[type] || '').filter(Boolean).join(' / ')
+          const saved = priceStockMap[key] || { price: defaultPrice, stock: defaultStock }
+          return {
+            key,
+            id: `v-${key}-${index}`,
+            values: combo,
+            price: saved.price,
+            stock: saved.stock,
+          }
+        })
+        .filter((variant) => !deletedVariants.includes(variant.key))
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeTypes, sizeOptions, colorOptions, volumeOptions, customValues, customTypes, priceStockMap])
+    }, [activeTypes, sizeOptions, colorOptions, volumeOptions, customValues, customTypes, priceStockMap, defaultPrice, defaultStock, deletedVariants])
 
     const hasVariants = derivedVariants.length > 0
 
@@ -290,16 +317,35 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
       setPriceStockMap((prev) => ({
         ...prev,
         [variantKey]: {
-          ...(prev[variantKey] || { price: '', stock: '' }),
+          ...(prev[variantKey] || { price: defaultPrice, stock: defaultStock }),
           [field]: value,
         },
       }))
     }
 
     const handleDeleteVariant = (variantKey: string) => {
+      // Remove the variant row entirely
+      setDeletedVariants((prev) => (prev.includes(variantKey) ? prev : [...prev, variantKey]))
       setPriceStockMap((prev) => {
         const next = { ...prev }
         delete next[variantKey]
+        return next
+      })
+    }
+
+    // Apply a single price / stock value to every variant row (current + future)
+    const applyToAll = (field: 'price' | 'stock', value: string) => {
+      if (!value) return
+      if (field === 'price') setDefaultPrice(value)
+      if (field === 'stock') setDefaultStock(value)
+      setPriceStockMap((prev) => {
+        const next = { ...prev }
+        derivedVariants.forEach((variant) => {
+          next[variant.key] = {
+            price: field === 'price' ? value : prev[variant.key]?.price || defaultPrice,
+            stock: field === 'stock' ? value : prev[variant.key]?.stock || defaultStock,
+          }
+        })
         return next
       })
     }
@@ -311,6 +357,8 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
           label: row.key || row.id,
           stock: Number(row.stock) || 0,
           lowStock: Number(row.stock) > 0 && Number(row.stock) <= 5,
+          price: row.price,
+          attributes: row.values,
         })),
     }), [derivedVariants])
 
@@ -322,9 +370,28 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
           label: row.key || row.id,
           stock: Number(row.stock) || 0,
           lowStock: Number(row.stock) > 0 && Number(row.stock) <= 5,
+          price: row.price,
+          attributes: row.values,
         }))
       )
     }, [derivedVariants, onVariantsChange])
+
+    // Persist variant builder state to sessionStorage whenever it changes
+    useEffect(() => {
+      if (typeof window === 'undefined') return
+      sessionStorage.setItem('posVariantState', JSON.stringify({
+        activeTypes,
+        sizeOptions,
+        colorOptions,
+        volumeOptions,
+        customTypes,
+        customValues,
+        priceStockMap,
+        defaultPrice,
+        defaultStock,
+        deletedVariants,
+      }))
+    }, [activeTypes, sizeOptions, colorOptions, volumeOptions, customTypes, customValues, priceStockMap, defaultPrice, defaultStock, deletedVariants])
 
     return (
       <div className="cat-grid vb-grid">
@@ -336,16 +403,17 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
               {t('addVariant') || 'បន្ថែមជម្រើសដូចជា ពណ៌ និងទំហំ'}
             </h2>
 
-            {/* Variant cards */}
+            {/* Variant cards — active cards disappear, appear back when closed */}
             <div className="vb-cards">
               {(Object.keys(typeIcons) as string[]).map((type) => {
                 const isActive = activeTypes.includes(type)
+                if (isActive) return null // hide the button when active
                 return (
                   <button
                     key={type}
                     type="button"
                     onClick={() => toggleType(type)}
-                    className={`vb-card${isActive ? ' is-active' : ''}`}
+                    className="vb-card"
                   >
                     <span className="vb-card__ico">{typeIcons[type]}</span>
                     <span className="vb-card__label">{t(type)}</span>
@@ -356,12 +424,13 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
               {/* Custom active types */}
               {customTypes.map((custom) => {
                 const isActive = activeTypes.includes(custom.key)
+                if (isActive) return null // hide the button when active
                 return (
                   <button
                     key={custom.key}
                     type="button"
                     onClick={() => toggleType(custom.key)}
-                    className={`vb-card${isActive ? ' is-active' : ''}`}
+                    className="vb-card"
                   >
                     <span className="vb-card__ico"><Plus size={18} strokeWidth={2} /></span>
                     <span className="vb-card__label">{custom.name}</span>
@@ -570,6 +639,82 @@ const ProductVariantBuilder = forwardRef<ProductVariantBuilderHandle, ProductVar
             <h2 className="cat-cardtitle">
               {t('typesAndStock') || 'កំណត់តម្លៃ និងចំនួនស្តុកសម្រាប់រាល់បំរែបំរួលនិមួយៗ'}
             </h2>
+
+            {/* Apply-to-all helpers — under the label title */}
+            <div className="vb-apply-all">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-[var(--dp-body)]">
+                  {t('applyPriceToAll') || 'Apply price to all'}:
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  inputMode="decimal"
+                  className="vb-apply-input"
+                  placeholder="0.00"
+                  aria-label={t('applyPriceToAll') || 'Apply price to all'}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      applyToAll('price', (e.target as HTMLInputElement).value)
+                      ;(e.target as HTMLInputElement).value = ''
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value) {
+                      applyToAll('price', e.target.value)
+                      e.target.value = ''
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  className="vb-apply-btn"
+                  onClick={() => {
+                    // no-op; blur handler performs the apply
+                  }}
+                >
+                  {t('apply') || 'Apply'}
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-[var(--dp-body)]">
+                  {t('applyStockToAll') || 'Apply stock to all'}:
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  inputMode="numeric"
+                  className="vb-apply-input"
+                  placeholder="0"
+                  aria-label={t('applyStockToAll') || 'Apply stock to all'}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      applyToAll('stock', (e.target as HTMLInputElement).value)
+                      ;(e.target as HTMLInputElement).value = ''
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value) {
+                      applyToAll('stock', e.target.value)
+                      e.target.value = ''
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  className="vb-apply-btn"
+                  onClick={() => {
+                    // no-op; blur handler performs the apply
+                  }}
+                >
+                  {t('apply') || 'Apply'}
+                </button>
+              </div>
+            </div>
 
             {!hasVariants && (
               <p className="vb-empty">

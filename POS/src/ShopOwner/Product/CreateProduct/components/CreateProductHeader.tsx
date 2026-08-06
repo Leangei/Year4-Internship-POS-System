@@ -30,12 +30,12 @@ export default function CreateProductHeader({
         </button>
 
         <h1 className="text-[20px] font-bold leading-[1.3] text-[var(--dp-green-900)] sm:text-[24px]">
-          {t('createProduct', { ns: 'product' }) || 'Create New Product'}: {productName}
+          {t('create.createProduct', { ns: 'product' }) || t('createProduct', { ns: 'product' }) || 'Create New Product'}: {productName}
         </h1>
       </div>
 
-      {/* Right */}
-      <div className="flex w-full items-center gap-2 sm:w-auto">
+      {/* Right — hidden on mobile/tablet; mobile uses the bottom Save button instead */}
+      <div className="hidden w-full items-center gap-2 xl:flex xl:w-auto">
         <button
           type="button"
           onClick={onCancel}

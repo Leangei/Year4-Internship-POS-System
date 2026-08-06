@@ -4,6 +4,9 @@ export interface ProductVariant {
   label: string
   stock: number
   lowStock?: boolean
+  price?: string
+  /** Structured variant attributes, e.g. { size: 'XL', color: 'ខ្មៅ' } */
+  attributes?: Record<string, string>
 }
 
 export interface ProductDraft {

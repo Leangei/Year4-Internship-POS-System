@@ -9,8 +9,14 @@ import enHomepage from "./english/homepage.json";
 import kmHomepage from "./khmer/homepage.json";
 import enProduct from "./english/product.json";
 import kmProduct from "./khmer/product.json";
-import enProductDetail from "./english/productDetail.json";
-import kmProductDetail from "./khmer/productDetail.json";
+
+const flattenProductTranslations = (resource: Record<string, any>) => ({
+  ...resource.list,
+  ...resource.detail,
+  ...resource.create,
+  ...resource.edit,
+  ...resource.variant,
+});
 
 i18n
   .use(LanguageDetector)
@@ -22,14 +28,14 @@ i18n
         sidebar: enSidebar,
         homepage: enHomepage,
         product: enProduct,
-        productDetail: enProductDetail,
+        productDetail: flattenProductTranslations(enProduct),
       },
       km: {
         auth: kmAuth,
         sidebar: kmSidebar,
         homepage: kmHomepage,
         product: kmProduct,
-        productDetail: kmProductDetail,
+        productDetail: flattenProductTranslations(kmProduct),
       },
     },
     fallbackLng: "km",

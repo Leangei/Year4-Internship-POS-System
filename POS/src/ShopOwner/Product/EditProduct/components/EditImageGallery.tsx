@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X, Plus } from 'lucide-react'
+import { compressImageFile } from '../../../../utils/imageCompression'
 import capImg from '../../../../assets/productdetail/cap.jpg'
 import cap1Img from '../../../../assets/productdetail/cap1.jpg'
 import cappImg from '../../../../assets/productdetail/capp.jpg'
@@ -12,9 +13,10 @@ interface ImageItem {
 
 interface EditImageGalleryProps {
   initialImages?: ImageItem[]
+  onImagesChange?: (images: ImageItem[]) => void
 }
 
-export default function EditImageGallery({ initialImages = [] }: EditImageGalleryProps) {
+export default function EditImageGallery({ initialImages = [], onImagesChange }: EditImageGalleryProps) {
   const { t } = useTranslation('productDetail')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [images, setImages] = useState<ImageItem[]>(() => {
@@ -32,7 +34,11 @@ export default function EditImageGallery({ initialImages = [] }: EditImageGaller
 
   const handleRemove = (id: string) => {
     const idx = images.findIndex((img) => img.id === id)
-    setImages((prev) => prev.filter((img) => img.id !== id))
+    setImages((prev) => {
+      const next = prev.filter((img) => img.id !== id)
+      onImagesChange?.(next)
+      return next
+    })
     if (activeIndex >= idx && activeIndex > 0) {
       setActiveIndex(activeIndex - 1)
     }
@@ -42,14 +48,25 @@ export default function EditImageGallery({ initialImages = [] }: EditImageGaller
     fileInputRef.current?.click()
   }
 
-  const handleFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files) return
-    const newImages: ImageItem[] = Array.from(files).map((file, i) => ({
-      id: `new-${Date.now()}-${i}`,
-      src: URL.createObjectURL(file),
-    }))
-    setImages((prev) => [...prev, ...newImages])
+    try {
+      const compressed = await Promise.all(
+        Array.from(files).map((file) => compressImageFile(file)),
+      )
+      const newImages: ImageItem[] = compressed.map((src, i) => ({
+        id: `new-${Date.now()}-${i}`,
+        src,
+      }))
+      setImages((prev) => {
+        const next = [...prev, ...newImages]
+        onImagesChange?.(next)
+        return next
+      })
+    } catch (error) {
+      console.error('Failed to process images:', error)
+    }
     // Reset input so same file can be re-selected
     e.target.value = ''
   }

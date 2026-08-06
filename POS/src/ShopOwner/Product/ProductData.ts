@@ -1,6 +1,10 @@
 import type { ProductItem, ProductVariant } from './Productlist/components/ProductTypes'
+import { compressProductsToFit, estimateProductImageBytes } from '../../utils/imageCompression'
 
 const PRODUCTS_STORAGE_KEY = 'posProducts'
+
+/** localStorage quota is ~5MB in most browsers; leave headroom for other keys. */
+const STORAGE_TARGET_BYTES = 4_000_000
 
 const createProductStatus = (stock: number) => {
   if (stock <= 0) return 'outOfStock' as const
@@ -150,12 +154,12 @@ export const buildProductItem = (input: ProductSaveInput): ProductItem => {
   }
 }
 
-export const createAndSaveProduct = (input: ProductSaveInput): ProductItem => {
+export const createAndSaveProduct = async (input: ProductSaveInput): Promise<ProductItem> => {
   const newProduct = buildProductItem(input)
   const existingProducts = readStoredProducts()
   const nextProducts = [newProduct, ...existingProducts]
 
-  saveProducts(nextProducts)
+  await saveProducts(nextProducts)
   return newProduct
 }
 
@@ -188,18 +192,49 @@ export const loadProducts = (): ProductItem[] => {
   return safeParseProducts(stored)
 }
 
-export const saveProducts = (products: ProductItem[]) => {
+const tryWriteProducts = (products: ProductItem[]): boolean => {
+  try {
+    window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products))
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Persist products to localStorage. If the write would exceed the storage
+ * quota, images are progressively compressed (smaller dimensions + lower
+ * quality) and the write is retried until it fits.
+ */
+export const saveProducts = async (products: ProductItem[]): Promise<void> => {
   if (typeof window === 'undefined') {
     return
   }
 
-  try {
-    const normalizedProducts = normalizeProducts(products)
-    window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(normalizedProducts))
+  const normalizedProducts = normalizeProducts(products)
+
+  // Fast path: try the write as-is first.
+  if (tryWriteProducts(normalizedProducts)) {
     window.dispatchEvent(new Event(PRODUCTS_STORAGE_KEY))
-  } catch {
-    // ignore storage errors
+    return
   }
+
+  // Quota exceeded — progressively compress images until the data fits.
+  const compressedProducts = await compressProductsToFit(normalizedProducts, STORAGE_TARGET_BYTES)
+
+  if (tryWriteProducts(compressedProducts)) {
+    window.dispatchEvent(new Event(PRODUCTS_STORAGE_KEY))
+    return
+  }
+
+  // Even the most aggressive compression didn't fit. Surface a clear error.
+  const totalImageBytes = compressedProducts.reduce(
+    (sum, product) => sum + estimateProductImageBytes(product),
+    0,
+  )
+  throw new Error(
+    `Storage is full. The product images total ~${Math.round(totalImageBytes / 1024)}KB and cannot fit in browser storage. Try removing some images or using smaller photos.`,
+  )
 }
 
 export const getProductById = (id: string) => loadProducts().find((product) => product.id === id)
