@@ -1,0 +1,17 @@
+{
+  "title": "Approval",
+  "description": "Manage shop approvals from SuperAdmin.",
+  "pendingCount": "{{count}} pending shop applications awaiting review.",
+  "pending": "Pending",
+  "approved": "Approved",
+  "rejected": "Rejected",
+  "all": "All",
+  "searchPlaceholder": "Search by name, email or phone...",
+  "noShopsFound": "No shops found.",
+  "approve": "Approve",
+  "reject": "Reject",
+  "submittedOn": "Submitted on {{date}} at {{time}}",
+  "pendingStatus": "pending",
+  "approvedStatus": "approved",
+  "rejectedStatus": "rejected"
+}

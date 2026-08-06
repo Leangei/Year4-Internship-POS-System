@@ -74,94 +74,94 @@ function DonutChart({ data }: { data: { label: string; value: number; color: str
 }
 
 export default function SuperAdminDashboardPage() {
-  const { t } = useTranslation('homepage')
+  const { t } = useTranslation('superHomepage')
 
   const actionButtons = [
-    { label: t('superAdmin.createShop'), icon: PlusCircle, variant: 'solid' },
-    { label: t('superAdmin.createPlan'), icon: PlusCircle, variant: 'outline' },
+    { label: t('createShop'), icon: PlusCircle, variant: 'solid' },
+    { label: t('createPlan'), icon: PlusCircle, variant: 'outline' },
   ]
 
   const kpiCards = [
     {
-      title: t('superAdmin.totalRevenue'),
+      title: t('totalRevenue'),
       value: '$4,820',
-      detail: t('superAdmin.totalRevenueDetail'),
+      detail: t('totalRevenueDetail'),
       icon: DollarSign,
       accent: 'bg-[#134F07] text-white',
     },
     {
-      title: t('superAdmin.shopCount'),
+      title: t('shopCount'),
       value: '128',
-      detail: t('superAdmin.shopCountDetail'),
+      detail: t('shopCountDetail'),
       icon: Store,
       accent: 'bg-[#BAF912] text-slate-900',
     },
     {
-      title: t('superAdmin.activeSubscriptions'),
+      title: t('activeSubscriptions'),
       value: '96',
-      detail: t('superAdmin.activeSubscriptionsDetail'),
+      detail: t('activeSubscriptionsDetail'),
       icon: ShieldCheck,
       accent: 'bg-[#134F07] text-white',
     },
     {
-      title: t('superAdmin.expiringSubscriptions'),
+      title: t('expiringSubscriptions'),
       value: '5',
-      detail: t('superAdmin.expiringSubscriptionsDetail'),
+      detail: t('expiringSubscriptionsDetail'),
       icon: Clock,
       accent: 'bg-[#BAF912] text-slate-900',
     },
   ]
 
   const registrationData = [
-    { label: t('superAdmin.monthJan'), value: 45 },
-    { label: t('superAdmin.monthFeb'), value: 52 },
-    { label: t('superAdmin.monthMar'), value: 38 },
-    { label: t('superAdmin.monthApr'), value: 65 },
-    { label: t('superAdmin.monthMay'), value: 48 },
-    { label: t('superAdmin.monthJun'), value: 72, highlight: true },
-    { label: t('superAdmin.monthJul'), value: 55 },
-    { label: t('superAdmin.monthAug'), value: 60 },
+    { label: t('monthJan'), value: 45 },
+    { label: t('monthFeb'), value: 52 },
+    { label: t('monthMar'), value: 38 },
+    { label: t('monthApr'), value: 65 },
+    { label: t('monthMay'), value: 48 },
+    { label: t('monthJun'), value: 72, highlight: true },
+    { label: t('monthJul'), value: 55 },
+    { label: t('monthAug'), value: 60 },
   ]
 
   const subscriptionDistribution = [
-    { label: t('superAdmin.freePlan'), value: 45, color: '#16A34A' },
-    { label: t('superAdmin.businessPlan'), value: 32, color: '#84CC16' },
-    { label: t('superAdmin.enterprisePlan'), value: 23, color: '#65A30D' },
+    { label: t('freePlan'), value: 45, color: '#16A34A' },
+    { label: t('businessPlan'), value: 32, color: '#84CC16' },
+    { label: t('enterprisePlan'), value: 23, color: '#65A30D' },
   ]
 
   const recentShops = [
-    { name: t('superAdmin.recentShopOne'), owner: t('superAdmin.recentShopOwnerOne'), date: '15/06/2026', status: t('superAdmin.activeStatus') },
-    { name: t('superAdmin.recentShopTwo'), owner: t('superAdmin.recentShopOwnerTwo'), date: '12/06/2026', status: t('superAdmin.pendingStatus') },
-    { name: t('superAdmin.recentShopThree'), owner: t('superAdmin.recentShopOwnerThree'), date: '10/06/2026', status: t('superAdmin.activeStatus') },
-    { name: t('superAdmin.recentShopFour'), owner: t('superAdmin.recentShopOwnerFour'), date: '08/06/2026', status: t('superAdmin.expiredStatus') },
+    { name: t('recentShopOne'), owner: t('recentShopOwnerOne'), date: '15/06/2026', status: t('activeStatus') },
+    { name: t('recentShopTwo'), owner: t('recentShopOwnerTwo'), date: '12/06/2026', status: t('pendingStatus') },
+    { name: t('recentShopThree'), owner: t('recentShopOwnerThree'), date: '10/06/2026', status: t('activeStatus') },
+    { name: t('recentShopFour'), owner: t('recentShopOwnerFour'), date: '08/06/2026', status: t('expiredStatus') },
   ]
 
   const recentActivities = [
     {
       icon: AlertTriangle,
-      title: t('superAdmin.expiringSubscriptionAlert'),
-      details: t('superAdmin.expiringSubscriptionAlertDetail'),
+      title: t('expiringSubscriptionAlert'),
+      details: t('expiringSubscriptionAlertDetail'),
       iconBg: '#FFF0E6',
       iconColor: '#F97316',
     },
     {
       icon: CheckCircle,
-      title: t('superAdmin.newShopRegistered'),
-      details: t('superAdmin.newShopRegisteredDetail'),
+      title: t('newShopRegistered'),
+      details: t('newShopRegisteredDetail'),
       iconBg: '#E8F1EA',
       iconColor: '#456B4C',
     },
     {
       icon: Bell,
-      title: t('superAdmin.storageAlert'),
-      details: t('superAdmin.storageAlertDetail'),
+      title: t('storageAlert'),
+      details: t('storageAlertDetail'),
       iconBg: '#EDF0E0',
       iconColor: '#4A6700',
     },
     {
       icon: Activity,
-      title: t('superAdmin.suspendedShop'),
-      details: t('superAdmin.suspendedShopDetail'),
+      title: t('suspendedShop'),
+      details: t('suspendedShopDetail'),
       iconBg: '#FDE8E9',
       iconColor: '#B72028',
     },
@@ -176,9 +176,9 @@ export default function SuperAdminDashboardPage() {
         <section className="rounded-[24px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:p-6">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <h1 className="text-xl font-semibold text-slate-900 sm:text-3xl">{t('superAdmin.overview')}</h1>
+              <h1 className="text-xl font-semibold text-slate-900 sm:text-3xl">{t('overview')}</h1>
               <p className="mt-1 max-w-2xl text-xs text-slate-600 sm:mt-2 sm:text-sm">
-                {t('superAdmin.overviewDescription')}
+                {t('overviewDescription')}
               </p>
             </div>
 
@@ -229,11 +229,11 @@ export default function SuperAdminDashboardPage() {
           <div className="h-full rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.registrationStats')}</h2>
-                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.registrationStatsDescription')}</p>
+                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{t('registrationStats')}</h2>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('registrationStatsDescription')}</p>
               </div>
               <button className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
-                {t('superAdmin.juneMonth')}
+                {t('juneMonth')}
               </button>
             </div>
 
@@ -245,7 +245,7 @@ export default function SuperAdminDashboardPage() {
                     <div key={item.label} className="group relative flex flex-1 flex-col h-full items-center justify-end">
                       {/* Tooltip on hover */}
                       <div className="absolute -top-8 left-1/2 z-10 -translate-x-1/2 scale-0 rounded-lg bg-[#134F07] px-3 py-1.5 text-xs font-bold text-white shadow-lg transition-all duration-200 group-hover:scale-100">
-                        {item.value} {t('superAdmin.shopLabel')}
+                        {item.value} {t('shopLabel')}
                         <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-[#134F07]" />
                       </div>
                       <p className="mb-2 text-sm font-bold text-slate-700 transition-all duration-200 group-hover:text-[#134F07]">{item.value}</p>
@@ -274,8 +274,8 @@ export default function SuperAdminDashboardPage() {
           <div className="h-full rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.subscriptionPlans')}</h2>
-                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.subscriptionPlansDescription')}</p>
+                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{t('subscriptionPlans')}</h2>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('subscriptionPlansDescription')}</p>
               </div>
             </div>
             <div className="mt-4 flex flex-col gap-4 sm:mt-6 sm:flex-row sm:items-center">
@@ -303,10 +303,10 @@ export default function SuperAdminDashboardPage() {
           <div className="rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.newlyRegisteredShops')}</h3>
-                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.newlyRegisteredShopsDescription')}</p>
+                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{t('newlyRegisteredShops')}</h3>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('newlyRegisteredShopsDescription')}</p>
               </div>
-              <button className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">{t('superAdmin.viewAll')}</button>
+              <button className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">{t('viewAll')}</button>
             </div>
             <div className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
               {recentShops.map((shop) => (
@@ -320,7 +320,7 @@ export default function SuperAdminDashboardPage() {
                       <p className="text-xs text-slate-500 sm:text-sm truncate">{shop.owner} · {shop.date}</p>
                     </div>
                   </div>
-                  <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold sm:px-3 sm:py-1 ${shop.status === t('superAdmin.activeStatus') ? 'bg-emerald-100 text-emerald-700' : shop.status === t('superAdmin.pendingStatus') ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+                  <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold sm:px-3 sm:py-1 ${shop.status === t('activeStatus') ? 'bg-emerald-100 text-emerald-700' : shop.status === t('pendingStatus') ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
                     {shop.status}
                   </span>
                 </div>
@@ -332,10 +332,10 @@ export default function SuperAdminDashboardPage() {
           <div className="rounded-[20px] bg-white p-4 shadow-[var(--dp-shadow-card)] sm:rounded-[24px] sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{t('superAdmin.recentActivities')}</h3>
-                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('superAdmin.recentActivitiesDescription')}</p>
+                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{t('recentActivities')}</h3>
+                <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{t('recentActivitiesDescription')}</p>
               </div>
-              <button className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">{t('superAdmin.viewAll')}</button>
+              <button className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">{t('viewAll')}</button>
             </div>
             <div className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
               {recentActivities.map((activity) => {

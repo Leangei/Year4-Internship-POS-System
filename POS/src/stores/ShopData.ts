@@ -1,8 +1,8 @@
 export interface Shop {
   id: string
   name: string
-  email: string
   owner: string
+  email: string
   phone: string
   password: string
   status: 'pending' | 'approved' | 'rejected'
@@ -30,13 +30,13 @@ export const getShops = (): Shop[] => readShops()
 export const getShopByPhone = (phone: string): Shop | undefined =>
   readShops().find((s) => s.phone === phone)
 
-export const registerShop = (name: string, email: string, owner: string, phone: string, password: string): Shop => {
+export const registerShop = (name: string, owner: string, email: string, phone: string, password: string): Shop => {
   const shops = readShops()
   const newShop: Shop = {
     id: `shop-${Date.now()}`,
     name,
-    email,
     owner,
+    email,
     phone,
     password,
     status: 'pending',
@@ -68,23 +68,4 @@ export const loginShop = (phone: string, password: string): Shop | null => {
   const shop = getShopByPhone(phone)
   if (!shop || shop.password !== password) return null
   return shop
-}
-
-/** Seed demo shops so the approval page has data to show. */
-export const seedDemoShops = (): void => {
-  if (typeof window === 'undefined') return
-  const shops = readShops()
-  if (shops.some((s) => s.phone === '099 887 665')) return
-
-  shops.push({
-    id: 'shop-neary-fashion',
-    name: 'Neary Fashion (NF)',
-    email: 'neary.fashion@gmail.com',
-    owner: 'Srey Neath',
-    phone: '099 887 665',
-    password: 'password123',
-    status: 'pending',
-    createdAt: '2021-07-17T09:12:00',
-  })
-  writeShops(shops)
 }

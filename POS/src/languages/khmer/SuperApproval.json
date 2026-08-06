@@ -1,0 +1,17 @@
+{
+  "title": "ការអនុម័ត",
+  "description": "គ្រប់គ្រងការអនុម័តហាងពី SuperAdmin។",
+  "pendingCount": "{{count}} កម្មវិធីហាងកំពុងរង់ចាំការពិនិត្យ។",
+  "pending": "កំពុងរង់ចាំ",
+  "approved": "បានអនុម័ត",
+  "rejected": "បានបដិសេធ",
+  "all": "ទាំងអស់",
+  "searchPlaceholder": "ស្វែងរកតាមឈ្មោះ អ៊ីមែល ឬលេខទូរស័ព្ទ...",
+  "noShopsFound": "រកមិនឃើញហាងទេ។",
+  "approve": "អនុម័ត",
+  "reject": "បដិសេធ",
+  "submittedOn": "បានដាក់ស្នើនៅ {{date}} ម៉ោង {{time}}",
+  "pendingStatus": "កំពុងរង់ចាំ",
+  "approvedStatus": "បានអនុម័ត",
+  "rejectedStatus": "បានបដិសេធ"
+}

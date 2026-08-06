@@ -7,6 +7,10 @@ import enSidebar from "./english/sidebar.json";
 import kmSidebar from "./khmer/sidebar.json";
 import enHomepage from "./english/homepage.json";
 import kmHomepage from "./khmer/homepage.json";
+import enSuperHomepage from "./english/SuperHomepage.json";
+import kmSuperHomepage from "./khmer/SuperHomepage.json";
+import enSuperApproval from "./english/SuperApproval.json";
+import kmSuperApproval from "./khmer/SuperApproval.json";
 import enProduct from "./english/product.json";
 import kmProduct from "./khmer/product.json";
 
@@ -35,6 +39,8 @@ i18n
         auth: enAuth,
         sidebar: enSidebar,
         homepage: enHomepage,
+        superHomepage: enSuperHomepage,
+        superApproval: enSuperApproval,
         product: enProduct,
         productDetail: flattenProductTranslations(enProduct),
       },
@@ -42,6 +48,8 @@ i18n
         auth: kmAuth,
         sidebar: kmSidebar,
         homepage: kmHomepage,
+        superHomepage: kmSuperHomepage,
+        superApproval: kmSuperApproval,
         product: kmProduct,
         productDetail: flattenProductTranslations(kmProduct),
       },
