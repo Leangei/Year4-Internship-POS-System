@@ -41,13 +41,13 @@ export default function EditGeneralInfo({
   const maxChars = 500
 
   return (
-    <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-5">
-      <h2 className="text-sm font-semibold text-[var(--dp-ink)] mb-5">
+    <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-4 sm:p-5">
+      <h2 className="text-sm font-semibold text-[var(--dp-ink)] mb-4 sm:mb-5">
         {t('generalInfo') || 'ពត៌មានទូទៅ'}
       </h2>
 
       {/* Name + Category row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {/* Product Name */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="cat-name" className="text-xs font-medium text-[var(--dp-body)]">
@@ -109,7 +109,7 @@ export default function EditGeneralInfo({
       </div>
 
       {/* Price */}
-      <div className="flex flex-col gap-1.5 mt-4">
+      <div className="flex flex-col gap-1.5 mt-3 sm:mt-4">
         <label htmlFor="cat-price" className="text-xs font-medium text-[var(--dp-body)]">
           {t('enterPrice') || 'បញ្ចូលតម្លៃ'}
           <span className="text-[var(--dp-danger)] ml-0.5">*</span>
@@ -139,7 +139,7 @@ export default function EditGeneralInfo({
       </div>
 
       {/* Description */}
-      <div className="flex flex-col gap-1.5 mt-4">
+      <div className="flex flex-col gap-1.5 mt-3 sm:mt-4">
         <label htmlFor="cat-desc" className="text-xs font-medium text-[var(--dp-body)]">
           {t('details') || 'ពត៌មានលម្អិត'}
         </label>

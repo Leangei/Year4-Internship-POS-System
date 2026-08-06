@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 interface EditProductHeaderProps {
   productName: string
   sku: string
+  productId?: string
   onCancel: () => void
   onSave: () => void
 }
@@ -12,11 +13,20 @@ interface EditProductHeaderProps {
 export default function EditProductHeader({
   productName,
   sku,
+  productId,
   onCancel,
   onSave,
 }: EditProductHeaderProps) {
   const { t } = useTranslation('productDetail')
   const navigate = useNavigate()
+
+  const handleBack = () => {
+    if (productId) {
+      navigate(`/shopOwner/products/${productId}`)
+    } else {
+      navigate(-1)
+    }
+  }
 
   return (
     <>
@@ -24,16 +34,17 @@ export default function EditProductHeader({
       <div className="flex items-center gap-2 mb-4">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={handleBack}
           aria-label={t('back') || 'ត្រឡប់ក្រោយ'}
           className="
             inline-flex items-center justify-center
-            w-8 h-8 rounded-lg
+            w-11 h-11 sm:w-8 sm:h-8 rounded-lg
             text-[var(--dp-body)] hover:bg-[var(--dp-surface-2)]
-            transition-colors
+            transition-colors touch-manipulation
           "
         >
-          <ArrowLeft size={15} strokeWidth={1.9} />
+          <ArrowLeft size={20} strokeWidth={1.9} className="sm:hidden" />
+          <ArrowLeft size={15} strokeWidth={1.9} className="hidden sm:block" />
         </button>
         <span className="text-xs font-medium text-[var(--dp-muted)] tabular-nums">
           #{sku}
@@ -47,7 +58,7 @@ export default function EditProductHeader({
             {t('editProduct')} : {productName}
           </h1>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div className="hidden sm:flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <button
             type="button"
             onClick={onCancel}

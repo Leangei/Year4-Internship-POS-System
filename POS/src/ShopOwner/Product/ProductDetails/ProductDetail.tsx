@@ -32,11 +32,11 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="p-3 sm:p-4 lg:p-8 max-w-7xl mx-auto flex flex-col gap-4 sm:gap-6">
+    <div className="p-2.5 sm:p-4 lg:p-8 max-w-7xl mx-auto flex flex-col gap-3 sm:gap-6">
       <ProductDetailHeader productId={product.id} productName={product.name} productSku={product.sku} />
 
-      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6">
-        <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-3 sm:gap-6">
+        <div className="lg:col-span-4 flex flex-col gap-3 sm:gap-6">
           <ProductGallery product={product} />
           <div className="hidden lg:block">
             <FacebookCaption
@@ -47,7 +47,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        <div className="lg:col-span-8 flex flex-col gap-4 sm:gap-6">
+        <div className="lg:col-span-8 flex flex-col gap-3 sm:gap-6">
           <ProductInfoCard product={product} />
           <ProductStats product={product} />
           <ProductDescription description={product.description} />
@@ -55,7 +55,7 @@ export default function ProductDetail() {
           <button
             type="button"
             onClick={() => navigate('/shopOwner/orders')}
-            className="w-full rounded-xl bg-[#00351B] py-3.5 font-semibold text-white text-sm cursor-pointer hover:bg-[#004d24] transition-colors"
+            className="hidden sm:block w-full rounded-xl bg-[#00351B] py-3.5 font-semibold text-white text-sm cursor-pointer hover:bg-[#004d24] transition-colors"
           >
             + {t('addNewOrder')}
           </button>
@@ -69,6 +69,15 @@ export default function ProductDetail() {
           colors={getUniqueVariantColors(product.variants)}
         />
       </div>
+
+      {/* Bottom action button — mobile only, scrolls with page */}
+      <button
+        type="button"
+        onClick={() => navigate('/shopOwner/orders')}
+        className="sm:hidden w-full rounded-xl bg-[#00351B] py-3.5 font-semibold text-white text-sm cursor-pointer hover:bg-[#004d24] transition-colors"
+      >
+        + {t('addNewOrder')}
+      </button>
     </div>
   )
 }

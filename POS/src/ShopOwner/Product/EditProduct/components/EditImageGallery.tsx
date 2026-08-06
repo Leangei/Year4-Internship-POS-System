@@ -72,8 +72,8 @@ export default function EditImageGallery({ initialImages = [], onImagesChange }:
   }
 
   return (
-    <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-5">
-      <h2 className="flex items-center gap-2 text-sm font-semibold text-[var(--dp-ink)] mb-4">
+    <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-4 sm:p-5">
+      <h2 className="flex items-center gap-2 text-sm font-semibold text-[var(--dp-ink)] mb-3 sm:mb-4">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="block flex-shrink-0">
           <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
           <circle cx="8.5" cy="9.5" r="1.6" />
@@ -84,11 +84,11 @@ export default function EditImageGallery({ initialImages = [], onImagesChange }:
 
       {/* Main Image */}
       {images.length > 0 && (
-        <div className="relative rounded-xl overflow-hidden bg-[#F3F4F3] mb-4">
+        <div className="relative rounded-xl overflow-hidden bg-[#F3F4F3] mb-3 sm:mb-4">
           <img
             src={images[activeIndex]?.src}
             alt=""
-            className="w-full h-[280px] object-cover"
+            className="w-full h-[220px] sm:h-[280px] object-cover"
           />
           <button
             type="button"
@@ -108,9 +108,9 @@ export default function EditImageGallery({ initialImages = [], onImagesChange }:
       )}
 
       {/* Thumbnails */}
-      <div className="flex gap-2.5 flex-wrap">
+      <div className="flex gap-2 sm:gap-2.5 flex-wrap">
         {images.map((img, idx) => (
-          <div key={img.id} className="relative w-16 h-16">
+          <div key={img.id} className="relative w-14 h-14 sm:w-16 sm:h-16">
             <button
               type="button"
               onClick={() => setActiveIndex(idx)}
@@ -143,14 +143,15 @@ export default function EditImageGallery({ initialImages = [], onImagesChange }:
           type="button"
           onClick={handleAddClick}
           className="
-            w-16 h-16 rounded-lg border-2 border-dashed border-[#C0C9BF]
+            w-14 h-14 sm:w-16 sm:h-16 rounded-lg border-2 border-dashed border-[#C0C9BF]
             flex flex-col items-center justify-center gap-0.5
-            text-[#666666] text-xs
+            text-[#666666] text-[10px] sm:text-xs
             hover:border-[#00351B] hover:text-[#00351B]
             transition-colors
           "
         >
-          <Plus size={18} strokeWidth={2} />
+          <Plus size={16} strokeWidth={2} className="sm:hidden" />
+          <Plus size={18} strokeWidth={2} className="hidden sm:block" />
           <span>{t('add') || 'បន្ថែម'}</span>
         </button>
       </div>

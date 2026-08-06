@@ -79,7 +79,7 @@ export default function CreateProduct() {
   return (
     <div className="mx-auto max-w-7xl p-3 sm:p-4 lg:p-8">
       <CreateProductHeader
-        productName={name || t('createProduct', { ns: 'product' }) || 'Create Product'}
+        productName={name || t('create.createProduct', { ns: 'product' }) || 'Create Product'}
         onCancel={handleCancel}
         onSave={handleSave}
       />

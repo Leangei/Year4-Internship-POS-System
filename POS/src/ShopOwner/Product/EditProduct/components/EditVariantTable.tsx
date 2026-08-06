@@ -208,8 +208,8 @@ export default function EditVariantTable({ initialVariants, onVariantsChange }: 
   }
 
   return (
-    <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-5">
-      <h2 className="text-sm font-semibold text-[var(--dp-ink)] mb-5">
+    <div className="rounded-[20px] border border-[#E7E8E9] bg-white p-4 sm:p-5">
+      <h2 className="text-sm font-semibold text-[var(--dp-ink)] mb-4 sm:mb-5">
         {t('typesAndStock')}
       </h2>
 
@@ -329,7 +329,7 @@ export default function EditVariantTable({ initialVariants, onVariantsChange }: 
 
       {/* Mobile Row Layout */}
       <div className="block lg:hidden overflow-x-auto">
-        <div className="min-w-[420px] rounded-2xl border border-[var(--dp-line)] bg-[var(--dp-surface-2)] p-2">
+        <div className="min-w-[380px] rounded-2xl border border-[var(--dp-line)] bg-[var(--dp-surface-2)] p-2">
           <div className="flex items-start gap-2 pb-2">
             {showSize && (
               <div className="min-w-[88px]">
@@ -437,7 +437,7 @@ export default function EditVariantTable({ initialVariants, onVariantsChange }: 
       </div>
 
       {/* Add Column */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={handleAddColumn}
@@ -492,7 +492,7 @@ export default function EditVariantTable({ initialVariants, onVariantsChange }: 
       </div>
 
       {/* Bottom Add Row Button */}
-      <div className="mt-4">
+      <div className="mt-3 sm:mt-4">
         <button
           type="button"
           onClick={handleAddRow}

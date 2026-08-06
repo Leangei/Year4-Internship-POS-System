@@ -42,7 +42,7 @@ export default function ProductVariantTable({ variants, price = '' }: ProductVar
 
       <div className="dp-table">
         <div className="dp-table__scroll">
-          <table className="dp-table__el" style={{ minWidth: 560 }}>
+          <table className="dp-table__el" style={{ minWidth: 480 }}>
             <thead>
               <tr>
                 {attributeKeys.length > 0 ? (
@@ -101,7 +101,7 @@ export default function ProductVariantTable({ variants, price = '' }: ProductVar
                       <span className="dp-tnum">0</span>
                     </td>
                     <td className="dp-table__td">
-                      <span className={`cat-vstatus inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${getStatusClass(variant.stock)}`}>
+                      <span className={`cat-vstatus inline-flex items-center gap-1.5 rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold whitespace-nowrap ${getStatusClass(variant.stock)}`}>
                         {getStatusLabel(variant.stock)}
                       </span>
                     </td>

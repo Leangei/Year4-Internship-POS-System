@@ -39,8 +39,10 @@ export default function ProductDetailHeader({
     inline-flex
     items-center
     justify-center
-    w-10
-    h-10
+    w-9
+    h-9
+    sm:w-10
+    sm:h-10
     rounded-[10px]
     bg-white
     border
@@ -51,8 +53,14 @@ export default function ProductDetailHeader({
   "
 >
   <ArrowLeft
+    size={16}
+    strokeWidth={1.9}
+    className="sm:hidden"
+  />
+  <ArrowLeft
     size={18}
     strokeWidth={1.9}
+    className="hidden sm:block"
   />
 </button>
 
@@ -76,7 +84,8 @@ export default function ProductDetailHeader({
           {/* Title */}
       <h1
   className="
-    text-[24px]
+    text-[18px]
+    sm:text-[24px]
     leading-[1.35]
     font-bold
    text-[var(--dp-green-900)]
@@ -94,12 +103,18 @@ export default function ProductDetailHeader({
       <button
         type="button"
         onClick={() => navigate(`/shopOwner/products/${productId}/edit`)}
+        aria-label={t('editProduct')}
         className="
           inline-flex
           items-center
-          gap-2
-          px-5
-          py-3
+          justify-center
+          gap-2.5
+          w-9
+          h-9
+          sm:w-auto
+          sm:h-auto
+          sm:px-5
+          sm:py-3
           rounded-full
           border
           border-[var(--dp-line)]
@@ -110,8 +125,9 @@ export default function ProductDetailHeader({
           hover:bg-[var(--dp-surface-2)]
         "
       >
-        <Pencil size={20} />
-        {t('editProduct')}
+        <Pencil size={16} className="sm:hidden" />
+        <Pencil size={20} className="hidden sm:block" />
+        <span className="hidden sm:inline">{t('editProduct')}</span>
       </button>
 
     </header>

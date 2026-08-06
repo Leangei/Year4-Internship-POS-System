@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import EditProductHeader from './components/EditProductHeader'
 import EditImageGallery from './components/EditImageGallery'
 import EditGeneralInfo from './components/EditGeneralInfo'
@@ -10,6 +11,7 @@ import { getUniqueVariantColors } from '../../../utils/variantColors'
 import type { ProductStatus, ProductVariant } from '../Productlist/components/ProductTypes'
 
 export default function EditProduct() {
+  const { t } = useTranslation('productDetail')
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const product = id ? getProductById(id) : undefined
@@ -69,10 +71,11 @@ export default function EditProduct() {
   }
 
   return (
-    <div className="p-3 sm:p-4 lg:p-8 max-w-7xl mx-auto">
+    <div className="p-3 sm:p-4 lg:p-8 max-w-7xl mx-auto pb-24 sm:pb-8">
       <EditProductHeader
         productName={name}
         sku={product.sku}
+        productId={product.id}
         onCancel={handleCancel}
         onSave={handleSave}
       />
@@ -118,6 +121,28 @@ export default function EditProduct() {
             onVariantsChange={setVariants}
           />
         </div>
+      </div>
+
+      {/* Bottom action bar — mobile only, scrolls with page */}
+      <div className="sm:hidden mt-4 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-full border border-[var(--dp-line)] bg-white text-[var(--dp-body)] font-semibold text-sm hover:bg-[var(--dp-surface-2)] transition-colors"
+        >
+          {t('cancel') || 'បោះបង់'}
+        </button>
+        <button
+          type="button"
+          onClick={handleSave}
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-[var(--dp-green-900)] text-white font-semibold text-sm hover:bg-[var(--dp-green-800)] transition-colors"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="block flex-shrink-0">
+            <path d="M6 3h8l4 4v14H6V3Z" />
+            <path d="M14 3v4h4M9 12h6M9 16h6" />
+          </svg>
+          <span>{t('save') || 'រក្សាទុក'}</span>
+        </button>
       </div>
     </div>
   )
