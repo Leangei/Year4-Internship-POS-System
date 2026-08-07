@@ -1,0 +1,27 @@
+{
+  "list": {
+    "title": "អតិថិជន",
+    "description": "គ្រប់គ្រងអតិថិជន និងប្រវត្តិនៃការទិញរបស់ពួកគេ។",
+    "totalCustomers": "អតិថិជនសរុប",
+    "addCustomer": "បន្ថែមអតិថិជន",
+    "searchPlaceholder": "ស្វែងរកតាមឈ្មោះ លេខទូរស័ព្ទ ឬអ៊ីមែល...",
+    "noCustomers": "រកមិនឃើញអតិថិជនទេ។",
+    "customerId": "លេខសម្គាល់អតិថិជន",
+    "phone": "ទូរស័ព្ទ",
+    "address": "អាសយដ្ឋាន",
+    "registeredOn": "បានចុះឈ្មោះនៅ {{date}}",
+    "lastPurchase": "ការទិញចុងក្រោយ៖ {{date}}",
+    "totalOrders": "ការកម្មង់សរុប",
+    "totalSpent": "ចំណាយសរុប",
+    "status": "ស្ថានភាព",
+    "new": "ថ្មី",
+    "regular": "ធម្មតា",
+    "vip": "VIP",
+    "manual": "ដោយដៃ",
+    "auto": "ស្វ័យប្រវត្តិ",
+    "viewDetails": "មើលលម្អិត",
+    "edit": "កែសម្រួល",
+    "delete": "លុប",
+    "action": "សកម្មភាព"
+  }
+}

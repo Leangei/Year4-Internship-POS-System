@@ -97,7 +97,7 @@ export default function ProductFilters({
               aria-pressed={isActive}
               className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-bold leading-[1.4] cursor-pointer flex-shrink-0 whitespace-nowrap border ${
                 isActive
-                  ? 'bg-[var(--dp-ink)] border-[var(--dp-ink)] text-white'
+                  ? 'bg-[#BAF911] border-[#BAF911] text-[#00351B]'
                   : 'bg-white border-[var(--dp-line)] text-[var(--dp-muted)]'
               }`}
               onClick={() => setCategoryFilter(option.value)}
@@ -137,7 +137,7 @@ export default function ProductFilters({
                 aria-pressed={categoryFilter === option.value}
                 className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border text-sm leading-[var(--dp-lh-sm)] font-medium cursor-pointer whitespace-nowrap font-[inherit] transition-all duration-150 ${
                   categoryFilter === option.value
-                    ? 'bg-[var(--dp-green-900)] border-[var(--dp-green-900)] text-white'
+                    ? 'bg-[#BAF911] border-[#BAF911] text-[#00351B]'
                     : 'bg-white border-[var(--dp-line)] text-[var(--dp-body)] hover:bg-[var(--dp-surface-2)] hover:border-[var(--dp-line-strong)]'
                 }`}
                 onClick={() => setCategoryFilter(option.value)}

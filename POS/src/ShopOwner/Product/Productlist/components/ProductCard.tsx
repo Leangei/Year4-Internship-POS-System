@@ -184,10 +184,10 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
           <div className="flex-1 min-w-0 flex flex-col gap-1 p-4 px-5">
             {/* Name + Price row */}
             <div className="flex items-baseline gap-3">
-              <h3 className="flex-1 min-w-0 m-0 text-[var(--dp-fs-lg)] leading-[var(--dp-lh-lg)] font-bold text-[var(--dp-ink)] overflow-hidden text-ellipsis">
+              <h3 className="flex-1 min-w-0 m-0 text-sm leading-[var(--dp-lh-sm)] font-bold text-[var(--dp-ink)] overflow-hidden text-ellipsis">
                 {product.name}
               </h3>
-              <span className="flex-shrink-0 text-[var(--dp-fs-lg)] leading-[var(--dp-lh-lg)] font-bold text-[var(--dp-ink)] tabular-nums">
+              <span className="flex-shrink-0 text-sm leading-[var(--dp-lh-sm)] font-bold text-[var(--dp-ink)] tabular-nums">
                 {getLowestVariantPrice(product)}
               </span>
             </div>
@@ -251,12 +251,13 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
     py-2
     rounded-full
     bg-transparent
+    border
+    border-[var(--dp-line)]
     text-[var(--dp-body)]
     text-sm
     font-semibold
     cursor-pointer
-    border-none
-    transition-[background]
+    transition-[background,border-color]
     duration-150
     hover:bg-[var(--dp-chip)]
     flex-1
@@ -272,7 +273,7 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
                   <Pencil size={18} strokeWidth={1.9} />
                 </span>
               </button>
-              <button type="button" onClick={(e) => { e.stopPropagation(); onDelete?.(product.id) }} className="inline-flex items-center justify-center p-2 rounded-full bg-transparent text-[var(--dp-danger-ink)] cursor-pointer font-[inherit] border-none transition-[background] duration-150 hover:bg-[var(--dp-danger-tint)]" aria-label={t('list.delete')}>
+              <button type="button" onClick={(e) => { e.stopPropagation(); onDelete?.(product.id) }} className="inline-flex items-center justify-center p-2 rounded-full bg-transparent border border-[var(--dp-line)] text-[var(--dp-danger-ink)] cursor-pointer font-[inherit] transition-[background,border-color] duration-150 hover:bg-[var(--dp-danger-tint)] hover:border-[var(--dp-line-strong)]" aria-label={t('list.delete')}>
                 <span className="inline-flex items-center justify-center flex-shrink-0 leading-none">
                   <Trash2 size={18} strokeWidth={1.9} />
                 </span>

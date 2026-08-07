@@ -1,0 +1,27 @@
+{
+  "list": {
+    "title": "Customers",
+    "description": "Manage your customers and their purchasing history.",
+    "totalCustomers": "Total customers",
+    "addCustomer": "Add Customer",
+    "searchPlaceholder": "Search by name, phone or email...",
+    "noCustomers": "No customers found.",
+    "customerId": "Customer ID",
+    "phone": "Phone",
+    "address": "Address",
+    "registeredOn": "Registered on {{date}}",
+    "lastPurchase": "Last purchase: {{date}}",
+    "totalOrders": "Total Orders",
+    "totalSpent": "Total Spent",
+    "status": "Status",
+    "new": "New",
+    "regular": "Regular",
+    "vip": "VIP",
+    "manual": "Manual",
+    "auto": "Auto",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "delete": "Delete",
+    "action": "Action"
+  }
+}
