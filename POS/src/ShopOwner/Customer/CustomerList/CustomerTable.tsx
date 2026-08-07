@@ -82,7 +82,78 @@ export default function CustomerTable({ customers, onEdit, onDelete }: CustomerT
 
   return (
     <div className="dp-table">
-      <div className="dp-table__scroll">
+      {/* ── Mobile: Card List (hidden on desktop) ── */}
+      <div className="lg:hidden flex flex-col gap-3">
+        {customers.map((customer) => (
+          <div
+            key={customer.id}
+            className="bg-white rounded-[var(--dp-r-card)] border border-[var(--dp-line)] shadow-[var(--dp-shadow-card)] p-4"
+          >
+            {/* Avatar + Name + Status + Action buttons */}
+            <div className="flex items-center gap-3">
+              <span className="dp-avatar dp-avatar--lime" title={customer.name} style={{ '--dp-avatar-size': '44px' } as React.CSSProperties}>
+                {getPhotoSrc(customer.photo) ? (
+                  <img className="dp-avatar__img" src={getPhotoSrc(customer.photo)} alt={customer.name} />
+                ) : (
+                  <span className="dp-avatar__initials">{getInitials(customer.name)}</span>
+                )}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <div className="cu-name">{customer.name}</div>
+                  {getStatusPill(customer.status)}
+                </div>
+                <div className="cu-sub dp-tnum">{customer.phone}</div>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center p-2 rounded-full bg-transparent border border-[var(--dp-line)] text-[var(--dp-body)] cursor-pointer font-[inherit] transition-[background,border-color] duration-150 hover:bg-[var(--dp-surface-2)] hover:border-[var(--dp-line-strong)]"
+                  aria-label={t('list.edit')}
+                  title={t('list.edit')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onEdit?.(customer)
+                  }}
+                >
+                  <span className="inline-flex items-center justify-center flex-shrink-0 leading-none">
+                    <Pencil size={16} strokeWidth={1.9} />
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center p-2 rounded-full bg-transparent border border-[var(--dp-line)] text-[var(--dp-danger-ink)] cursor-pointer font-[inherit] transition-[background,border-color] duration-150 hover:bg-[var(--dp-danger-tint)] hover:border-[var(--dp-line-strong)]"
+                  aria-label={t('list.delete')}
+                  title={t('list.delete')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDelete?.(customer)
+                  }}
+                >
+                  <span className="inline-flex items-center justify-center flex-shrink-0 leading-none">
+                    <Trash2 size={16} strokeWidth={1.9} />
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Total Spent / Total Orders */}
+            <div className="mt-3 flex items-center justify-between border-t border-[var(--dp-line)] pt-3">
+              <div>
+                <div className="text-[10px] leading-[1.4] text-[var(--dp-muted)]">{t('list.totalSpent')}</div>
+                <div className="cu-money dp-tnum">${customer.totalSpent.toFixed(2)}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-[10px] leading-[1.4] text-[var(--dp-muted)]">{t('list.totalOrders')}</div>
+                <div className="cu-sub dp-tnum" style={{ marginTop: '0px' }}>{customer.totalOrders}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Desktop: Table (hidden on mobile) ── */}
+      <div className="hidden lg:block dp-table__scroll">
         <table className="dp-table__el" style={{ minWidth: '820px' }}>
           <thead>
             <tr>
